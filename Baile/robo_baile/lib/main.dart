@@ -18,9 +18,9 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:window_size/window_size.dart';
 
-import 'data_transfer_page.dart';
-import 'infinite_process_page.dart';
-import 'performance_page.dart';
+import 'ui/data_transfer_page.dart';
+import 'ui/infinite_process_page.dart';
+import 'ui/performance_page.dart';
 
 void main() {
   setupWindow();
@@ -56,20 +56,20 @@ class HomePage extends StatelessWidget {
             bottom: const TabBar(
               tabs: [
                 Tab(
-                  icon: Icon(Icons.flash_on),
-                  text: 'Performance',
+                  icon: Icon(Icons.music_note),
+                  text: 'Música',
                 ),
                 Tab(
-                  icon: Icon(Icons.sync),
-                  text: 'Infinite Process',
+                  icon: Icon(Icons.list),
+                  text: 'Playlists',
                 ),
                 Tab(
-                  icon: Icon(Icons.storage),
-                  text: 'Data Transfer',
+                  icon: Icon(Icons.settings),
+                  text: 'Configuración',
                 ),
               ],
             ),
-            title: const Text('Isolate Example'),
+            title: const Text('Robobaile'),
           ),
           body: const TabBarView(
             children: [
