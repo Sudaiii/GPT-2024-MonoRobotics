@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+
 class Song {
   final String id;
   final String artist;
@@ -13,7 +15,12 @@ class Song {
     required this.songUrl,
   });
 
-  static List<Song> songs= [
+  Widget buildTitle(BuildContext context) => Text(title);
+  Widget buildArtist(BuildContext context) => Text(artist);
+
+
+
+  static List<Song> songs = [
     Song(
       id: '1',
       artist: 'Artist A',

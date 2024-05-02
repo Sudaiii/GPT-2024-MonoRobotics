@@ -16,11 +16,14 @@ import 'dart:io' show Platform;
 
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
+import 'package:isolate_example/ui/songs_list.dart';
 import 'package:window_size/window_size.dart';
 
 import 'ui/data_transfer_page.dart';
 import 'ui/infinite_process_page.dart';
-import 'ui/performance_page.dart';
+import 'ui/songs_list.dart';
+
+import 'models/song.dart';
 
 void main() {
   setupWindow();
@@ -73,7 +76,7 @@ class HomePage extends StatelessWidget {
           ),
           body: const TabBarView(
             children: [
-              PerformancePage(),
+              SongList(),
               InfiniteProcessPageStarter(),
               DataTransferPageStarter(),
             ],
