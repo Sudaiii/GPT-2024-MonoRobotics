@@ -1,46 +1,57 @@
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_media_metadata/flutter_media_metadata.dart';
+import 'package:path_provider/path_provider.dart';
+
 
 class Song {
-  final String id;
-  final String artist;
-  final String title;
-  final String songImageUrl;
-  final String songUrl;
+  String songUrl;
+  String title;
+  String artist;
+  Uint8List? image;
 
   Song({
-    this.id = '',
-    required this.artist,
-    required this.title,
-    required this.songImageUrl,
     required this.songUrl,
+    required this.title,
+    required this.artist,
+    this.image,
   });
+
+  // static Future<Song> fromUrl(String songUrl) async {
+  //   List<Directory>? externalStorageDir = await getExternalStorageDirectories();
+  //   if (externalStorageDir != null) {
+  //     print(externalStorageDir);
+  //     String musicPath = '${externalStorageDir[0]}/Music/01 - Marcin Przybylowicz - V.mp3.mp3';
+  //     File musicFile = File(musicPath);
+  //     if (await musicFile.exists()) {
+  //       final metadata = await MetadataRetriever.fromFile(File(songUrl));
+  //       String title = await metadata.trackName ?? "MISSING TITLE";
+  //       String artist = metadata.albumArtistName ?? "MISSING ARTIST";
+  //       Uint8List? image = metadata.albumArt;
+  //       print(title);
+  //       return Song(
+  //           songUrl: songUrl,
+  //           title: title,
+  //           artist: artist,
+  //           image: image
+  //       );
+  //     } else {
+  //       print('File does not existt');
+  //     }
+  //   } else {
+  //     print('Could not access external storage directory');
+  //   }
+  //
+  //   return Song(
+  //       songUrl: 'teeest',
+  //       title: 'Song A',
+  //       artist: 'Artist A'
+  //   );
+  // }
 
   Widget buildTitle(BuildContext context) => Text(title);
   Widget buildArtist(BuildContext context) => Text(artist);
 
-
-
-  static List<Song> songs = [
-    Song(
-      id: '1',
-      artist: 'Artist A',
-      title: 'Song A',
-      songImageUrl: 'URL',
-      songUrl: 'test'
-    ),
-    Song(
-        id: '2',
-        artist: 'Artist B',
-        title: 'Song B',
-        songImageUrl: 'URL',
-        songUrl: 'test'
-    ),
-    Song(
-        id: '3',
-        artist: 'Artist C',
-        title: 'Song C',
-        songImageUrl: 'URL',
-        songUrl: 'test'
-    )
-  ];
 }

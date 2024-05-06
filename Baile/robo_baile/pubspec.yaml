@@ -1,4 +1,4 @@
-name: isolate_example
+name: robobaile
 description: A Flutter sample to demonstrate isolates
 version: 1.0.0+1
 publish_to: none
@@ -14,6 +14,9 @@ dependencies:
     git:
       url: https://github.com/google/flutter-desktop-embedding.git
       path: plugins/window_size
+  flutter_media_metadata: ^1.0.0
+  permission_handler: ^11.2.0
+  path_provider: ^2.1.3
 
 dev_dependencies:
   analysis_defaults:

@@ -1,16 +1,50 @@
 import 'package:flutter/material.dart';
-import 'package:isolate_example/models/song.dart';
+import 'package:robobaile/models/song.dart';
 
-class SongList extends StatelessWidget {
-  // final List<Song> items;
 
-  // const SongList({super.key, required this.items});
-  const SongList({super.key});
+class SongList extends StatefulWidget {
+  List<Song> songs = [];
+
+  SongList({super.key});
+
+  static int selected = -1;
+
+  @override
+  _SongList createState() => _SongList();
+}
+
+
+class _SongList extends State<SongList>{
+  Future _getSongs() async {
+    widget.songs = [
+      // await Song.fromUrl("/Music/01 - Marcin Przybylowicz - V.mp3"),
+      Song(
+          songUrl: 'teeest',
+          title: 'Song B',
+          artist: 'Artist B'
+      ),
+      Song(
+          songUrl: 'test',
+          title: 'Song C',
+          artist: 'Artist C'
+      )
+    ];
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.songs.isEmpty) {
+      _getSongs();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     const title = 'Lista canciones';
-    final items = Song.songs;
+
+    final items = widget.songs;
+
     return MaterialApp(
       title: title,
       home: Scaffold(
@@ -23,8 +57,12 @@ class SongList extends StatelessWidget {
             final item = items[index];
 
             return ListTile(
-              title: item.buildTitle(context),
-              subtitle: item.buildArtist(context),
+                title: item.buildTitle(context),
+                subtitle: item.buildArtist(context),
+                onTap: () {
+                  SongList.selected = index;
+                  //play_selected(index)
+                }
             );
           },
         ),
