@@ -6,8 +6,7 @@ void main() {
   runApp(const JoystickApp());
 }
 
-const joystickSize = 170.0;
-const actionButtonSize = 80.0;
+const joystickSize = 200.0;
 
 class JoystickApp extends StatelessWidget {
   const JoystickApp({Key? key}) : super(key: key);
@@ -28,12 +27,18 @@ class Control extends StatefulWidget {
 }
 
 class _ControlState extends State<Control> {
+  //Posiciones de los Joystcik
   double _joystickX = 20;
   double _joystickY = 0;
   double _joystickX2 = 20;
   double _joystickY2 = 0;
   JoystickMode _joystickMode = JoystickMode.all;
   JoystickMode _joystickMode_vel = JoystickMode.vertical;
+
+  void _handleButtonPress() {
+    // Lógica a ejecutar cuando se presiona el botón
+    print('Botón presionado');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,65 +51,75 @@ class _ControlState extends State<Control> {
           fontSize: 30,
         ),
         backgroundColor: Colors.teal,
+        actions: [
+          IconButton(
+
+            icon: Icon(Icons.settings),  // Icono del botón
+            onPressed: _handleButtonPress,  // Función que se ejecuta al presionar el botón,
+          ),
+        ],
       ),
       body: Row(
+
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Expanded(
             flex: 3,
             child: Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(50.0),
               child: Stack(
                 children: [
                   Positioned(
-                    left: _joystickX,
+                    left: 100,
                     bottom: _joystickY,
+                    child: Container(
+                      width: joystickSize,
+                      height: joystickSize,
+                      decoration: BoxDecoration(
+                        color: Colors.black,
+                        borderRadius: BorderRadius.circular(joystickSize / 2),
+                      ),
+                      child: Joystick(
+                        mode: _joystickMode,
 
-                      child: Container(
-                        width: joystickSize,
-                        height: joystickSize,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(joystickSize / 2),
-                        ),
-                        child: Joystick(
-                          mode: _joystickMode,
-                          listener: (details) {
-                            // Additional logic for the first joystick if needed
-                          },
-                        ),
+
+
+                        listener: (details) {
+                          // Additional logic for the first joystick if needed
+                        },
                       ),
                     ),
-
+                  ),
                 ],
               ),
             ),
           ),
           Expanded(
             flex: 2,
+
             child: Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(50.0),
+
               child: Stack(
                 children: [
                   Positioned(
-                    left: _joystickX2,
+                    left: 0,
                     bottom: _joystickY2,
-
-                      child: Container(
-                        width: joystickSize,
-                        height: joystickSize,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(joystickSize / 2),
-                        ),
-                        child: Joystick(
-                          mode: _joystickMode_vel,
-                          listener: (details) {
-                            // Additional logic for the second joystick if needed
-                          },
-                        ),
+                    child: Container(
+                      width: joystickSize,
+                      height: joystickSize,
+                      decoration: BoxDecoration(
+                        color: Colors.black,
+                        borderRadius: BorderRadius.circular(joystickSize / 2),
+                      ),
+                      child: Joystick(
+                        mode: _joystickMode_vel,
+                        listener: (details) {
+                          // Additional logic for the second joystick if needed
+                        },
                       ),
                     ),
+                  ),
                 ],
               ),
             ),
