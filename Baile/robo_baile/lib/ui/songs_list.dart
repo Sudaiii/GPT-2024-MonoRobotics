@@ -15,9 +15,11 @@ class SongList extends StatefulWidget {
 
 
 class _SongList extends State<SongList>{
+
+  // Fills list with songs, based on app configuration/memory
   Future _getSongs() async {
     widget.songs = [
-      // await Song.fromUrl("/Music/01 - Marcin Przybylowicz - V.mp3"),
+      // await Song.fromUrl("song"),
       Song(
           songUrl: 'teeest',
           title: 'Song B',

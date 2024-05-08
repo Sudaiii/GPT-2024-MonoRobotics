@@ -22,10 +22,11 @@ class Song {
   // static Future<Song> fromUrl(String songUrl) async {
   //   List<Directory>? externalStorageDir = await getExternalStorageDirectories();
   //   if (externalStorageDir != null) {
-  //     print(externalStorageDir);
-  //     String musicPath = '${externalStorageDir[0]}/Music/01 - Marcin Przybylowicz - V.mp3.mp3';
+  //     // Loads song from songUrl
+  //     String musicPath = '${externalStorageDir[0]}/Music/song.mp3';
   //     File musicFile = File(musicPath);
   //     if (await musicFile.exists()) {
+  //       // Uses metadata to fill song information
   //       final metadata = await MetadataRetriever.fromFile(File(songUrl));
   //       String title = await metadata.trackName ?? "MISSING TITLE";
   //       String artist = metadata.albumArtistName ?? "MISSING ARTIST";
