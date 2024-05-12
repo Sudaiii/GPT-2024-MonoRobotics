@@ -16,11 +16,11 @@ import 'dart:io' show Platform;
 
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
+import 'package:robobaile/ui/songs_list.dart';
 import 'package:window_size/window_size.dart';
 
 import 'ui/data_transfer_page.dart';
 import 'ui/infinite_process_page.dart';
-import 'ui/performance_page.dart';
 
 void main() {
   setupWindow();
@@ -37,7 +37,7 @@ const double windowHeight = 800;
 void setupWindow() {
   if (!kIsWeb && (Platform.isWindows || Platform.isLinux || Platform.isMacOS)) {
     WidgetsFlutterBinding.ensureInitialized();
-    setWindowTitle('Isolate Example');
+    setWindowTitle('Robobaile');
     setWindowMinSize(const Size(windowWidth, windowHeight));
   }
 }
@@ -56,7 +56,7 @@ class HomePage extends StatelessWidget {
             bottom: const TabBar(
               tabs: [
                 Tab(
-                  icon: Icon(Icons.music_note),
+                  icon: Icon(Icons.music_note, color: Colors.green),
                   text: 'Música',
                 ),
                 Tab(
@@ -71,9 +71,9 @@ class HomePage extends StatelessWidget {
             ),
             title: const Text('Robobaile'),
           ),
-          body: const TabBarView(
+          body: TabBarView(
             children: [
-              PerformancePage(),
+              SongList(),
               InfiniteProcessPageStarter(),
               DataTransferPageStarter(),
             ],
