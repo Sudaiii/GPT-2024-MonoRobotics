@@ -39,6 +39,15 @@ class _ControlState extends State<Control> {
     // Lógica a ejecutar cuando se presiona el botón
     print('Botón presionado');
   }
+  void _onJoystickMove(StickDragDetails details) {
+    double x = details.x;
+    double y = details.y;
+    int speedX = (x * 255).toInt(); // Escalamos el valor de -1.0 a 1.0 a -255 a 255
+    int speedY = (y * 255).toInt(); // Escalamos el valor de -1.0 a 1.0 a -255 a 255
+    String data = 'X$speedX Y$speedY\n';
+    //_sendData(data);
+    print('Joystick : data: $data');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -81,12 +90,12 @@ class _ControlState extends State<Control> {
                       ),
                       child: Joystick(
                         mode: _joystickMode,
+                        listener: _onJoystickMove,
 
 
-
-                        listener: (details) {
+                        //listener: (details) {
                           // Additional logic for the first joystick if needed
-                        },
+
                       ),
                     ),
                   ),
