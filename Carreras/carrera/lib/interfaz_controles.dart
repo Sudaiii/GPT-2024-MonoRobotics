@@ -105,6 +105,7 @@ class _ControlState extends State<Control> {
   double _joystickX = 20;
   double _joystickY = 0;
   final JoystickMode _joystickMode = JoystickMode.all;
+  int _activeButton = 0; // Estado para rastrear el botón activo
 
   void _onJoystickMove(StickDragDetails details) {
     double x = details.x;
@@ -113,6 +114,12 @@ class _ControlState extends State<Control> {
     int speedY = (y * 255).toInt();
     String data = 'X$speedX Y$speedY\n';
     print('Joystick : data: $data');
+  }
+
+  void _setActiveButton(int buttonIndex) {
+    setState(() {
+      _activeButton = buttonIndex;
+    });
   }
 
   @override
@@ -161,10 +168,11 @@ class _ControlState extends State<Control> {
                     children: [
                       ElevatedButton(
                         onPressed: () {
+                          _setActiveButton(3); // Establecer el botón 1 como activo
                           print('Botón 3 presionado');
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.pinkAccent,
+                          backgroundColor: _activeButton == 3 ? Colors.red : Colors.black26,
                         ),
                         child: const Text(
                           '3',
@@ -176,10 +184,11 @@ class _ControlState extends State<Control> {
                       ),
                       ElevatedButton(
                         onPressed: () {
+                          _setActiveButton(2); // Establecer el botón 2 como activo
                           print('Botón 2 presionado');
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.lightBlueAccent,
+                          backgroundColor: _activeButton == 2 ? Colors.lightBlueAccent : Colors.black26,
                         ),
                         child: const Text(
                           '2',
@@ -191,10 +200,11 @@ class _ControlState extends State<Control> {
                       ),
                       ElevatedButton(
                         onPressed: () {
+                          _setActiveButton(1); // Establecer el botón 3 como activo
                           print('Botón 1 presionado');
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.black26,
+                          backgroundColor: _activeButton == 1 ? Colors.pinkAccent : Colors.black26,
                         ),
                         child: const Text(
                           '1',
@@ -204,7 +214,6 @@ class _ControlState extends State<Control> {
                           ),
                         ),
                       ),
-
                     ],
                   ),
                 ),
@@ -218,7 +227,7 @@ class _ControlState extends State<Control> {
 }
 
 
-class Configuracion extends StatelessWidget {
+    class Configuracion extends StatelessWidget {
   const Configuracion({Key? key}) : super(key: key);
 
   @override
