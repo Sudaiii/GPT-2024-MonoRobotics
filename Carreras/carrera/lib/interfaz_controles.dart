@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_joystick/flutter_joystick.dart';
 
 void main() {
   runApp(const JoystickApp());
+  // Bloquea la orientación vertical
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.landscapeLeft,
+    DeviceOrientation.landscapeRight,
+  ]);
 }
 
 const joystickSize = 200.0;
