@@ -119,7 +119,7 @@ class _ControlState extends State<Control> {
           Expanded(
             flex: 3,
             child: Padding(
-              padding: const EdgeInsets.all(50.0),
+              padding: const EdgeInsets.symmetric(vertical: 25.0),
               child: Stack(
                 children: [
                   Positioned(
@@ -144,7 +144,7 @@ class _ControlState extends State<Control> {
           ),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 30.0, horizontal: 10.0),
+              padding: const EdgeInsets.symmetric(vertical: 30.0, horizontal: 0.0),
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Container(
