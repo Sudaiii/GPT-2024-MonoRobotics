@@ -142,12 +142,19 @@ class _ControlState extends State<Control> {
                       width: joystickSize,
                       height: joystickSize,
                       decoration: BoxDecoration(
-                        color: Colors.black,
+                        color: Colors.black12,
                         borderRadius: BorderRadius.circular(joystickSize / 2),
+
+                        border: Border.all(
+                          color: Colors.purple,
+                          width: 2.0, // Agrega un borde personalizado
+                        ),
                       ),
+
                       child: Joystick(
                         mode: _joystickMode,
                         listener: _onJoystickMove,
+
                       ),
                     ),
                   ),
