@@ -16,8 +16,11 @@ import 'dart:io' show Platform;
 
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
+import 'package:robobaile/ui/Abc.dart';
+import 'package:robobaile/ui/MyApp.dart';
 import 'package:robobaile/ui/songs_list.dart';
 import 'package:window_size/window_size.dart';
+
 
 import 'ui/data_transfer_page.dart';
 import 'ui/infinite_process_page.dart';
@@ -67,15 +70,27 @@ class HomePage extends StatelessWidget {
                   icon: Icon(Icons.settings),
                   text: 'Configuración',
                 ),
+
               ],
             ),
             title: const Text('Robobaile'),
           ),
-          body: TabBarView(
+          body: Stack(
             children: [
-              SongList(),
-              InfiniteProcessPageStarter(),
-              DataTransferPageStarter(),
+              TabBarView(
+                children: [
+                  SongList(),
+                  InfiniteProcessPageStarter(),
+                  DataTransferPageStarter(),
+
+                ],
+              ),
+              Positioned(
+                left: 0,
+                right: 0,
+                bottom: 0,
+                child: Abc(),
+              ),
             ],
           ),
         ),
@@ -83,3 +98,4 @@ class HomePage extends StatelessWidget {
     );
   }
 }
+

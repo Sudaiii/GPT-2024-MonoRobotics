@@ -1,6 +1,7 @@
+// songs_list.dart
 import 'package:flutter/material.dart';
 import 'package:robobaile/models/song.dart';
-
+import 'package:robobaile/ui/MyApp.dart';
 
 class SongList extends StatefulWidget {
   List<Song> songs = [];
@@ -13,9 +14,7 @@ class SongList extends StatefulWidget {
   _SongList createState() => _SongList();
 }
 
-
-class _SongList extends State<SongList>{
-
+class _SongList extends State<SongList> {
   // Fills list with songs, based on app configuration/memory
   Future _getSongs() async {
     widget.songs = [
@@ -51,20 +50,21 @@ class _SongList extends State<SongList>{
       title: title,
       home: Scaffold(
         body: ListView.builder(
-          // Let the ListView know how many items it needs to build.
           itemCount: items.length,
-          // Provide a builder function. This is where the magic happens.
-          // Convert each item into a widget based on the type of item it is.
           itemBuilder: (context, index) {
             final item = items[index];
 
             return ListTile(
-                title: item.buildTitle(context),
-                subtitle: item.buildArtist(context),
-                onTap: () {
-                  SongList.selected = index;
-                  //play_selected(index)
-                }
+              title: item.buildTitle(context),
+              subtitle: item.buildArtist(context),
+              onTap: () {
+                SongList.selected = index;
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => MyApp()),
+
+                );
+              },
             );
           },
         ),
@@ -72,3 +72,4 @@ class _SongList extends State<SongList>{
     );
   }
 }
+
