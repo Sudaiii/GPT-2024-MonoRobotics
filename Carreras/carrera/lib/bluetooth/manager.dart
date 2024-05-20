@@ -13,6 +13,7 @@ class BluetoothManager {
     listDevices();
   }
 
+
   Future<void> _requestPermissionBluetoothScan() async {
     final permission = Permission.bluetoothScan;
 
@@ -20,6 +21,7 @@ class BluetoothManager {
       await permission.request();
     }
   }
+
 
   Future<void> _requestPermissionBluetoothConnect() async {
     final permission = Permission.bluetoothConnect;
@@ -29,15 +31,22 @@ class BluetoothManager {
     }
   }
 
-  Future<void> listDevices() async {
-    devices = await FlutterBluetoothSerial.instance.getBondedDevices();
 
+  Future<List<BluetoothDevice>> listDevices() async {
+    devices = await FlutterBluetoothSerial.instance.getBondedDevices();
+    return devices;
+  }
+
+
+  Future<void> connect(String address) async {
+    devices = await FlutterBluetoothSerial.instance.getBondedDevices();
     try {
-      _connection = await BluetoothConnection.toAddress(device.address);
-      print('Connected to ${device.name}');
+      _connection = await BluetoothConnection.toAddress(address);
+      print('Connected to ${address}');
     } catch (error) {
       print('Error connecting to device: $error');
     }
   }
 
 }
+

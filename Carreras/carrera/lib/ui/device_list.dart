@@ -4,10 +4,12 @@ import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'package:robocarrera/bluetooth/device.dart';
+import 'package:robocarrera/bluetooth/manager.dart';
 
 
 class DeviceList extends StatefulWidget {
   List<Device> devices = [];
+  BluetoothManager manager =  BluetoothManager();
 
   DeviceList({super.key});
 
@@ -22,10 +24,7 @@ class _SongList extends State<DeviceList>{
 
   // Fills list with songs, based on app configuration/memory
   Future _getDevices() async {
-    _requestPermissionBluetoothScan();
-    _requestPermissionBluetoothConnect();
-
-    List<BluetoothDevice> devices = await FlutterBluetoothSerial.instance.getBondedDevices();
+    List<BluetoothDevice> devices = await widget.manager.listDevices();
 
     for (BluetoothDevice device in devices){
       String name = "Unknown Device";
@@ -43,21 +42,6 @@ class _SongList extends State<DeviceList>{
     );
   }
 
-  Future<void> _requestPermissionBluetoothScan() async {
-    final permission = Permission.bluetoothScan;
-
-    if (await permission.isDenied) {
-      await permission.request();
-    }
-  }
-
-  Future<void> _requestPermissionBluetoothConnect() async {
-    final permission = Permission.bluetoothConnect;
-
-    if (await permission.isDenied) {
-      await permission.request();
-    }
-  }
 
   @override
   void initState() {
@@ -66,6 +50,7 @@ class _SongList extends State<DeviceList>{
       _getDevices();
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +74,7 @@ class _SongList extends State<DeviceList>{
                 subtitle: item.buildSubtitle(context),
                 onTap: () {
                   DeviceList.selected = index;
-                  //play_selected(index)
+                  widget.manager.connect(items[index].address);
                 }
             );
           },
