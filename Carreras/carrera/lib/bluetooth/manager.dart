@@ -8,6 +8,8 @@ class BluetoothManager {
   late List<BluetoothDevice> devices;
 
   BluetoothManager(){
+    _requestPermissionBluetoothScan();
+    _requestPermissionBluetoothConnect();
     listDevices();
   }
 
