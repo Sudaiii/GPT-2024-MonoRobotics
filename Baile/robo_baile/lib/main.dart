@@ -12,24 +12,31 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// main.dart
 import 'dart:io' show Platform;
-
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:robobaile/ui/Abc.dart';
 import 'package:robobaile/ui/MyApp.dart';
 import 'package:robobaile/ui/songs_list.dart';
 import 'package:window_size/window_size.dart';
 
-
+import 'package:robobaile/ui/music_player_state.dart';
 import 'ui/data_transfer_page.dart';
 import 'ui/infinite_process_page.dart';
+
+
+
 
 void main() {
   setupWindow();
   runApp(
-    const MaterialApp(
-      home: HomePage(),
+    ChangeNotifierProvider(
+      create: (context) => MusicPlayerState(),
+      child:  MaterialApp(
+        home: HomePage(),
+      ),
     ),
   );
 }
@@ -50,13 +57,15 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final musicPlayerState = Provider.of<MusicPlayerState>(context);
+
     return MaterialApp(
       theme: ThemeData.light(),
       home: DefaultTabController(
         length: 3,
         child: Scaffold(
           appBar: AppBar(
-            bottom: const TabBar(
+            bottom:  TabBar(
               tabs: [
                 Tab(
                   icon: Icon(Icons.music_note, color: Colors.green),
@@ -70,27 +79,25 @@ class HomePage extends StatelessWidget {
                   icon: Icon(Icons.settings),
                   text: 'Configuración',
                 ),
-
               ],
             ),
-            title: const Text('Robobaile'),
+            title:  Text('Robobaile'),
           ),
           body: Stack(
             children: [
-              TabBarView(
+               TabBarView(
                 children: [
                   SongList(),
                   InfiniteProcessPageStarter(),
                   DataTransferPageStarter(),
-
                 ],
               ),
-              Positioned(
-                left: 0,
-                right: 0,
-                bottom: 0,
-                child: Abc(),
-              ),
+              if (musicPlayerState.isPlaying &&
+                  !musicPlayerState.isFullScreenPlayerVisible)
+                 Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Abc(),
+                ),
             ],
           ),
         ),
@@ -98,4 +105,3 @@ class HomePage extends StatelessWidget {
     );
   }
 }
-
