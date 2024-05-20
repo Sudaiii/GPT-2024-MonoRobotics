@@ -39,7 +39,7 @@ class Song {
   //           image: image
   //       );
   //     } else {
-  //       print('File does not existt');
+  //       print('File does not exist');
   //     }
   //   } else {
   //     print('Could not access external storage directory');

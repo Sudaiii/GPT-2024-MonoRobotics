@@ -61,26 +61,6 @@ class DataTransferPage extends StatelessWidget {
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   foregroundColor: switch (controller.runningTest) {
-                    1 => Colors.blueAccent,
-                    _ => Colors.blueGrey,
-                  },
-                ),
-                onPressed: () => controller.generateRandomNumbers(false),
-                child: const Text('Transfer Data to 2nd Isolate'),
-              ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: switch (controller.runningTest) {
-                    2 => Colors.blueAccent,
-                    _ => Colors.blueGrey,
-                  },
-                ),
-                onPressed: () => controller.generateRandomNumbers(true),
-                child: const Text('Transfer Data with TransferableTypedData'),
-              ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: switch (controller.runningTest) {
                     3 => Colors.blueAccent,
                     _ => Colors.blueGrey,
                   },
@@ -149,42 +129,6 @@ class DataTransferIsolateController extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> generateRandomNumbers(bool transferableTyped) async {
-    if (running) {
-      return;
-    }
-
-    if (transferableTyped) {
-      runningTest = 2;
-    } else {
-      runningTest = 1;
-    }
-
-    var random = Random();
-
-    currentProgress.clear();
-
-    _timer.reset();
-    _timer.start();
-
-    var randNums = <int>[];
-    for (var i = 0; i < 100; i++) {
-      randNums.clear();
-
-      for (var j = 0; j < 1000000; j++) {
-        randNums.add(random.nextInt(100));
-      }
-
-      if (transferableTyped) {
-        final transferable =
-            TransferableTypedData.fromList([Int32List.fromList(randNums)]);
-        await sendNumbers(transferable);
-      } else {
-        await sendNumbers(randNums);
-      }
-    }
-  }
-
   Future<void> sendNumbers(dynamic numList) async {
     return Future<void>(() {
       _outgoingSendPort.send(numList);
@@ -211,25 +155,7 @@ class RunningList extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.grey[200],
       ),
-      child: ListView.builder(
-        itemCount: progress.length,
-        itemBuilder: (context, index) {
-          return Column(
-            children: [
-              Card(
-                color: Colors.lightGreenAccent,
-                child: ListTile(
-                  title: Text(progress[index]),
-                ),
-              ),
-              const Divider(
-                color: Colors.blue,
-                height: 3,
-              ),
-            ],
-          );
-        },
-      ),
+
     );
   }
 }

@@ -12,7 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'dart:io' show Platform;
+import 'dart:io' show File, Platform;
+
 
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
@@ -25,7 +26,7 @@ import 'ui/infinite_process_page.dart';
 void main() {
   setupWindow();
   runApp(
-    const MaterialApp(
+    MaterialApp(
       home: HomePage(),
     ),
   );
@@ -43,7 +44,9 @@ void setupWindow() {
 }
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  HomePage({super.key});
+
+  Widget? _child; // Variable para manejar el estado
 
   @override
   Widget build(BuildContext context) {
@@ -71,11 +74,17 @@ class HomePage extends StatelessWidget {
             ),
             title: const Text('Robobaile'),
           ),
-          body: TabBarView(
+          body: Column(
             children: [
-              SongList(),
-              InfiniteProcessPageStarter(),
-              DataTransferPageStarter(),
+              Expanded(
+                child: TabBarView(
+                  children: [
+                    SongList(),
+                    InfiniteProcessPageStarter(),
+                    DataTransferPageStarter(),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
