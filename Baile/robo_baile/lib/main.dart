@@ -22,6 +22,7 @@ import 'package:window_size/window_size.dart';
 
 import 'ui/data_transfer_page.dart';
 import 'ui/infinite_process_page.dart';
+import 'ui/config.dart';
 
 void main() {
   setupWindow();
@@ -81,7 +82,7 @@ class HomePage extends StatelessWidget {
                   children: [
                     SongList(),
                     InfiniteProcessPageStarter(),
-                    DataTransferPageStarter(),
+                    Config(),
                   ],
                 ),
               ),
