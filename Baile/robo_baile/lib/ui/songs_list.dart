@@ -3,8 +3,8 @@ import 'dart:typed_data';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:robobaile/models/song.dart';
 import 'package:flutter_media_metadata/flutter_media_metadata.dart';
+import 'package:robobaile/models/song.dart';
 
 class SongList extends StatefulWidget {
   List<Song> songs = [];

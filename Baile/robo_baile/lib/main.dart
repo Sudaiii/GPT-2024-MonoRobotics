@@ -20,8 +20,6 @@ import 'package:flutter/material.dart';
 import 'package:robobaile/ui/songs_list.dart';
 import 'package:window_size/window_size.dart';
 
-import 'ui/data_transfer_page.dart';
-import 'ui/infinite_process_page.dart';
 import 'ui/config.dart';
 
 void main() {
@@ -54,7 +52,7 @@ class HomePage extends StatelessWidget {
     return MaterialApp(
       theme: ThemeData.light(),
       home: DefaultTabController(
-        length: 3,
+        length: 2,
         child: Scaffold(
           appBar: AppBar(
             bottom: const TabBar(
@@ -62,10 +60,6 @@ class HomePage extends StatelessWidget {
                 Tab(
                   icon: Icon(Icons.music_note, color: Colors.green),
                   text: 'Música',
-                ),
-                Tab(
-                  icon: Icon(Icons.list),
-                  text: 'Playlists',
                 ),
                 Tab(
                   icon: Icon(Icons.settings),
@@ -81,7 +75,6 @@ class HomePage extends StatelessWidget {
                 child: TabBarView(
                   children: [
                     SongList(),
-                    InfiniteProcessPageStarter(),
                     Config(),
                   ],
                 ),
