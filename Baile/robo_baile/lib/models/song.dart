@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'dart:typed_data';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_media_metadata/flutter_media_metadata.dart';
 import 'package:path_provider/path_provider.dart';
@@ -18,6 +17,10 @@ class Song {
     required this.artist,
     this.image,
   });
+  Widget buildTitle(BuildContext context) => Text(title);
+  Widget buildArtist(BuildContext context) => Text(artist);
+
+}
 
   // static Future<Song> fromUrl(String songUrl) async {
   //   List<Directory>? externalStorageDir = await getExternalStorageDirectories();
@@ -52,7 +55,3 @@ class Song {
   //   );
   // }
 
-  Widget buildTitle(BuildContext context) => Text(title);
-  Widget buildArtist(BuildContext context) => Text(artist);
-
-}

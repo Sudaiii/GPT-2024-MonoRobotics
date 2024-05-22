@@ -1,8 +1,12 @@
 // abc.dart
+// Abc.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:robobaile/ui/MyApp.dart';
 import 'package:robobaile/ui/music_player_state.dart';
+
+
+//reproductor pequeño
 
 class Abc extends StatefulWidget {
   const Abc({super.key});
@@ -74,7 +78,7 @@ class _Abc extends State<Abc> {
                 child: IconButton(
                   icon: musicPlayerState.isPlaying
                       ? const Icon(Icons.pause, color: Colors.pink)
-                      :  const Icon(Icons.play_arrow, color: Colors.pink),
+                      : const Icon(Icons.play_arrow, color: Colors.pink),
                   onPressed: () {
                     if (musicPlayerState.isPlaying) {
                       musicPlayerState.pauseSong();
@@ -82,9 +86,8 @@ class _Abc extends State<Abc> {
                       musicPlayerState.playSong(
                           musicPlayerState.currentSongTitle,
                           musicPlayerState.currentArtist,
-                          musicPlayerState.currentArtist//_currentSongUrl
+                          "musicPlayerState.currentSongUrl"
                       );
-
                     }
                   },
                 ),
@@ -96,4 +99,3 @@ class _Abc extends State<Abc> {
     );
   }
 }
-

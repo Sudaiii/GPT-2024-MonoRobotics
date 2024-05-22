@@ -1,13 +1,12 @@
-// myApp.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:robobaile/ui/music_player_state.dart';
 
 
-
-
+//Reproductor grande
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -45,12 +44,22 @@ class MyApp extends StatelessWidget {
               width: 300,
               height: 500,
               color: Colors.white.withOpacity(0.5),
-              //child: MusicPlayer(
-              //songTitle: musicPlayerState.songTitle,
-              //artist: musicPlayerState.artist,
-              //sPlaying: musicPlayerState.isPlaying,
-              //togglePlayPause: musicPlayerState.togglePlayPause,
-              //),
+              child: MusicPlayer(
+                songTitle: musicPlayerState.currentSongTitle,
+                artist: musicPlayerState.currentArtist,
+                isPlaying: musicPlayerState.isPlaying,
+                togglePlayPause: () {
+                  if (musicPlayerState.isPlaying) {
+                    musicPlayerState.pauseSong();
+                  } else {
+                    musicPlayerState.playSong(
+                      musicPlayerState.currentSongTitle,
+                      musicPlayerState.currentArtist,
+                      "musicPlayerState.currentSongUrl",
+                    );
+                  }
+                },
+              ),
             ),
           ),
         ),
@@ -71,8 +80,8 @@ class MusicPlayer extends StatelessWidget {
     required this.artist,
     required this.isPlaying,
     required this.togglePlayPause,
-    super.key,
-  });
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
