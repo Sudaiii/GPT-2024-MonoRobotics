@@ -1,11 +1,11 @@
 // abc.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:robobaile/ui/music_player_state.dart';
 import 'package:robobaile/ui/MyApp.dart';
+import 'package:robobaile/ui/music_player_state.dart';
 
 class Abc extends StatefulWidget {
-  const Abc({Key? key}) : super(key: key);
+  const Abc({super.key});
 
   @override
   _Abc createState() => _Abc();
@@ -28,8 +28,8 @@ class _Abc extends State<Abc> {
         musicPlayerState.setFullScreenPlayerVisible(true);
         Navigator.push(
           context,
-             MaterialPageRoute(
-               builder: (context) => MyApp(),
+          MaterialPageRoute<void>(
+            builder: (context) => const MyApp(),
           ),
         );
       },
@@ -73,8 +73,8 @@ class _Abc extends State<Abc> {
                 ),
                 child: IconButton(
                   icon: musicPlayerState.isPlaying
-                      ?  Icon(Icons.pause, color: Colors.pink)
-                      :  Icon(Icons.play_arrow, color: Colors.pink),
+                      ? const Icon(Icons.pause, color: Colors.pink)
+                      :  const Icon(Icons.play_arrow, color: Colors.pink),
                   onPressed: () {
                     if (musicPlayerState.isPlaying) {
                       musicPlayerState.pauseSong();

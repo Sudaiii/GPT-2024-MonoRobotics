@@ -14,27 +14,26 @@
 
 // main.dart
 import 'dart:io' show Platform;
+
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:robobaile/ui/Abc.dart';
-import 'package:robobaile/ui/MyApp.dart';
+import 'package:robobaile/ui/music_player_state.dart';
 import 'package:robobaile/ui/songs_list.dart';
 import 'package:window_size/window_size.dart';
 
-import 'package:robobaile/ui/music_player_state.dart';
 import 'ui/data_transfer_page.dart';
 import 'ui/infinite_process_page.dart';
 
-
-
+// main.dart
 
 void main() {
   setupWindow();
   runApp(
     ChangeNotifierProvider(
       create: (context) => MusicPlayerState(),
-      child:  MaterialApp(
+      child: const MaterialApp(
         home: HomePage(),
       ),
     ),
@@ -65,7 +64,7 @@ class HomePage extends StatelessWidget {
         length: 3,
         child: Scaffold(
           appBar: AppBar(
-            bottom:  TabBar(
+            bottom: const TabBar(
               tabs: [
                 Tab(
                   icon: Icon(Icons.music_note, color: Colors.green),
@@ -81,20 +80,20 @@ class HomePage extends StatelessWidget {
                 ),
               ],
             ),
-            title:  Text('Robobaile'),
+            title: const Text('Robobaile'),
           ),
           body: Stack(
             children: [
                TabBarView(
                 children: [
                   SongList(),
-                  InfiniteProcessPageStarter(),
-                  DataTransferPageStarter(),
+                 const InfiniteProcessPageStarter(),
+                  const DataTransferPageStarter(),
                 ],
               ),
               if (musicPlayerState.isPlaying &&
                   !musicPlayerState.isFullScreenPlayerVisible)
-                 Align(
+                const Align(
                   alignment: Alignment.bottomCenter,
                   child: Abc(),
                 ),
@@ -105,3 +104,5 @@ class HomePage extends StatelessWidget {
     );
   }
 }
+
+

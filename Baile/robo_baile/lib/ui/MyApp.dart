@@ -1,5 +1,4 @@
 // myApp.dart
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:robobaile/ui/music_player_state.dart';
@@ -14,10 +13,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final musicPlayerState = Provider.of<MusicPlayerState>(context);
 
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      canPop: true, // Cuando es `false`, bloquea la ruta actual para que no se pueda retroceder.
+      onPopInvoked: (didPop) {
+        // Realiza tu lógica aquí:
         musicPlayerState.setFullScreenPlayerVisible(false);
-        return true;
+        Navigator.pop(context);
       },
       child: Scaffold(
         appBar: AppBar(
@@ -45,16 +46,17 @@ class MyApp extends StatelessWidget {
               height: 500,
               color: Colors.white.withOpacity(0.5),
               //child: MusicPlayer(
-                //songTitle: musicPlayerState.songTitle,
-                //artist: musicPlayerState.artist,
-                //sPlaying: musicPlayerState.isPlaying,
-                //togglePlayPause: musicPlayerState.togglePlayPause,
+              //songTitle: musicPlayerState.songTitle,
+              //artist: musicPlayerState.artist,
+              //sPlaying: musicPlayerState.isPlaying,
+              //togglePlayPause: musicPlayerState.togglePlayPause,
               //),
             ),
           ),
         ),
       ),
     );
+
   }
 }
 
