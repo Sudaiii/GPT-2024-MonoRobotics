@@ -13,7 +13,6 @@
 // limitations under the License.
 
 // main.dart
-// main.dart
 import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
@@ -25,6 +24,8 @@ import 'package:window_size/window_size.dart';
 
 import 'ui/data_transfer_page.dart';
 import 'ui/infinite_process_page.dart';
+
+// main.dart
 
 void main() {
   setupWindow();

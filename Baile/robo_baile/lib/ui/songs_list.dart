@@ -1,10 +1,8 @@
-// songs_list.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:robobaile/models/song.dart';
 import 'package:robobaile/ui/MyApp.dart';
 import 'package:robobaile/ui/music_player_state.dart';
-
 
 class SongList extends StatefulWidget {
   List<Song> songs = [];
@@ -22,12 +20,12 @@ class _SongList extends State<SongList> {
   Future _getSongs() async {
     widget.songs = [
       Song(
-        songUrl: 'https://example.com/song_b.mp3',
+        songUrl: 'assets/audio/pixabay_audio.mp3',
         title: 'Song B',
         artist: 'Artist B',
       ),
       Song(
-        songUrl: 'https://example.com/song_c.mp3',
+        songUrl: 'assets/audio/pixabay_audio.mp3',
         title: 'Song C',
         artist: 'Artist C',
       ),
@@ -49,33 +47,32 @@ class _SongList extends State<SongList> {
     final items = widget.songs;
 
     return MaterialApp(
-        title: title,
-        home: Scaffold(
+      title: title,
+      home: Scaffold(
         body: ListView.builder(
-        itemCount: items.length,
-        itemBuilder: (context, index) {
-      final item = items[index];
+          itemCount: items.length,
+          itemBuilder: (context, index) {
+            final item = items[index];
 
-      return ListTile(
-          title: item.buildTitle(context),
-        subtitle: item.buildArtist(context),
-        onTap: () {
-          SongList.selected = index;
-          final musicPlayerState =
-          Provider.of<MusicPlayerState>(context, listen: false);
-          musicPlayerState.playSong(item.title, item.artist, 'assets/audio/pixabay_audio.mp3');
-          musicPlayerState.setFullScreenPlayerVisible(true);
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const MyApp(),
-            ),
-          );
-        },
-      );
-        },
+            return ListTile(
+              title: item.buildTitle(context),
+              subtitle: item.buildArtist(context),
+              onTap: () {
+                SongList.selected = index;
+                final musicPlayerState = Provider.of<MusicPlayerState>(context, listen: false);
+                musicPlayerState.playSong(item.title, item.artist, item.songUrl);
+                musicPlayerState.setFullScreenPlayerVisible(true);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const MyApp(),
+                  ),
+                );
+              },
+            );
+          },
         ),
-        ),
+      ),
     );
   }
 }

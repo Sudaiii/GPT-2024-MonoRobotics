@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:audioplayers/audioplayers.dart';
 import 'package:robobaile/ui/music_player_state.dart';
+import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
+import 'package:just_audio/just_audio.dart';
 
-
-//Reproductor grande
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -48,24 +47,14 @@ class MyApp extends StatelessWidget {
                 songTitle: musicPlayerState.currentSongTitle,
                 artist: musicPlayerState.currentArtist,
                 isPlaying: musicPlayerState.isPlaying,
-                togglePlayPause: () {
-                  if (musicPlayerState.isPlaying) {
-                    musicPlayerState.pauseSong();
-                  } else {
-                    musicPlayerState.playSong(
-                      musicPlayerState.currentSongTitle,
-                      musicPlayerState.currentArtist,
-                      "musicPlayerState.currentSongUrl",
-                    );
-                  }
-                },
+                togglePlayPause: musicPlayerState.togglePlayPause,
+                player: musicPlayerState.player,
               ),
             ),
           ),
         ),
       ),
     );
-
   }
 }
 
@@ -74,14 +63,16 @@ class MusicPlayer extends StatelessWidget {
   final String artist;
   final bool isPlaying;
   final VoidCallback togglePlayPause;
+  final AudioPlayer player;
 
   const MusicPlayer({
     required this.songTitle,
     required this.artist,
     required this.isPlaying,
     required this.togglePlayPause,
-    Key? key,
-  }) : super(key: key);
+    required this.player,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -135,18 +126,18 @@ class MusicPlayer extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 20),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: const [
-            Text('00:00'), // Temporizador
-            /*Slider(
-              value: 0.5, // Valor de ejemplo
-              onChanged: (newValue) {
-                Text('logica'),// Lógica para cambiar el tiempo de reproducción
+        StreamBuilder<Duration?>(
+          stream: player.positionStream,
+          builder: (context, snapshot) {
+            return ProgressBar(
+              progress: snapshot.data ?? Duration.zero,
+              buffered: player.bufferedPosition,
+              total: player.duration ?? Duration.zero,
+              onSeek: (duration) {
+                player.seek(duration);
               },
-            ),*/
-            Text('03:45'), // Duración de la canción
-          ],
+            );
+          },
         ),
       ],
     );

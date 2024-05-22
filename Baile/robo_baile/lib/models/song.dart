@@ -1,28 +1,23 @@
-import 'dart:io';
-import 'dart:typed_data';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter_media_metadata/flutter_media_metadata.dart';
-import 'package:path_provider/path_provider.dart';
-
+import 'package:flutter/material.dart';
 
 class Song {
-  String songUrl;
-  String title;
-  String artist;
-  Uint8List? image;
+  final String songUrl;
+  final String title;
+  final String artist;
 
-  Song({
-    required this.songUrl,
-    required this.title,
-    required this.artist,
-    this.image,
-  });
-  Widget buildTitle(BuildContext context) => Text(title);
-  Widget buildArtist(BuildContext context) => Text(artist);
+  Song({required this.songUrl, required this.title, required this.artist});
 
+  Widget buildTitle(BuildContext context) {
+    return Text(title, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold));
+  }
+
+  Widget buildArtist(BuildContext context) {
+    return Text(artist, style: const TextStyle(fontSize: 16));
+  }
 }
 
-  // static Future<Song> fromUrl(String songUrl) async {
+
+// static Future<Song> fromUrl(String songUrl) async {
   //   List<Directory>? externalStorageDir = await getExternalStorageDirectories();
   //   if (externalStorageDir != null) {
   //     // Loads song from songUrl

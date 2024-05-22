@@ -1,48 +1,36 @@
-// music_player_state.dart
 import 'package:flutter/material.dart';
-import 'package:audioplayers/audioplayers.dart';
+import 'package:just_audio/just_audio.dart';
 
-class MusicPlayerState with ChangeNotifier {
-  bool _isPlaying = false;
-  bool _isFullScreenPlayerVisible = false;
-  String _currentSongTitle = '';
-  String _currentArtist = '';
-  String _currentSongUrl = '';//"assets/audio/pixabay_audio.mp3"
+class MusicPlayerState extends ChangeNotifier {
+  final AudioPlayer player = AudioPlayer();
+  bool isPlaying = false;
+  String currentSongTitle = '';
+  String currentArtist = '';
+  bool isFullScreenPlayerVisible = false;
 
-  final AudioPlayer _audioPlayer = AudioPlayer();
-
-  bool get isPlaying => _isPlaying;
-  bool get isFullScreenPlayerVisible => _isFullScreenPlayerVisible;
-  String get currentSongTitle => _currentSongTitle;
-  String get currentArtist => _currentArtist;
-
-  void playSong(String title, String artist, String url) {
-    _currentSongTitle = title;
-    _currentArtist = artist;
-    _currentSongUrl = url;
-    _isPlaying = true;
-    _audioPlayer.play(UrlSource(url));
+  void playSong(String title, String artist, String songUrl) async {
+    currentSongTitle = title;
+    currentArtist = artist;
+    await player.setUrl(songUrl);
+    player.play();
+    isPlaying = true;
     notifyListeners();
   }
 
-  void pauseSong() {
-    _isPlaying = false;
-    _audioPlayer.pause();
-    notifyListeners();
-  }
-
-  void stopSong() {
-    _isPlaying = false;
-    _currentSongTitle = '';
-    _currentArtist = '';
-    _currentSongUrl = '';
-    _audioPlayer.stop();
+  void togglePlayPause() {
+    if (isPlaying) {
+      player.pause();
+    } else {
+      player.play();
+    }
+    isPlaying = !isPlaying;
     notifyListeners();
   }
 
   void setFullScreenPlayerVisible(bool isVisible) {
-    _isFullScreenPlayerVisible = isVisible;
+    isFullScreenPlayerVisible = isVisible;
     notifyListeners();
   }
 }
+
 

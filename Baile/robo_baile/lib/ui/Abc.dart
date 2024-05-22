@@ -1,12 +1,7 @@
-// abc.dart
-// Abc.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:robobaile/ui/MyApp.dart';
 import 'package:robobaile/ui/music_player_state.dart';
-
-
-//reproductor pequeño
 
 class Abc extends StatefulWidget {
   const Abc({super.key});
@@ -21,79 +16,29 @@ class _Abc extends State<Abc> {
     final musicPlayerState = Provider.of<MusicPlayerState>(context);
 
     return GestureDetector(
-      onHorizontalDragEnd: (details) {
-        if (details.primaryVelocity! > 0 || details.primaryVelocity! < 0) {
-          // Detener la canción y ocultar el mini reproductor
-          musicPlayerState.stopSong();
-        }
-      },
       onTap: () {
-        // Mostrar el reproductor grande y ocultar el mini reproductor
         musicPlayerState.setFullScreenPlayerVisible(true);
         Navigator.push(
           context,
-          MaterialPageRoute<void>(
+          MaterialPageRoute(
             builder: (context) => const MyApp(),
           ),
         );
       },
       child: Container(
-        height: 120.0,
-        decoration: BoxDecoration(
-          color: Colors.pink,
-          borderRadius: BorderRadius.circular(20.0),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      musicPlayerState.currentSongTitle,
-                      style: const TextStyle(
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black),
-                    ),
-                    Text(
-                      musicPlayerState.currentArtist,
-                      style: TextStyle(
-                          fontSize: 14.0, color: Colors.yellow[700]),
-                    ),
-                  ],
-                ),
+        color: Colors.grey[200],
+        height: 60,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Text(musicPlayerState.currentSongTitle),
+            IconButton(
+              icon: Icon(
+                musicPlayerState.isPlaying ? Icons.pause : Icons.play_arrow,
               ),
-              Container(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.white,
-                  border: Border.all(color: Colors.pink, width: 2.0),
-                ),
-                child: IconButton(
-                  icon: musicPlayerState.isPlaying
-                      ? const Icon(Icons.pause, color: Colors.pink)
-                      : const Icon(Icons.play_arrow, color: Colors.pink),
-                  onPressed: () {
-                    if (musicPlayerState.isPlaying) {
-                      musicPlayerState.pauseSong();
-                    } else {
-                      musicPlayerState.playSong(
-                          musicPlayerState.currentSongTitle,
-                          musicPlayerState.currentArtist,
-                          "musicPlayerState.currentSongUrl"
-                      );
-                    }
-                  },
-                ),
-              ),
-            ],
-          ),
+              onPressed: musicPlayerState.togglePlayPause,
+            ),
+          ],
         ),
       ),
     );
