@@ -11,45 +11,37 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final musicPlayerState = Provider.of<MusicPlayerState>(context);
 
-    return PopScope(
-      canPop: true, // Cuando es `false`, bloquea la ruta actual para que no se pueda retroceder.
-      onPopInvoked: (didPop) {
-        // Realiza tu lógica aquí:
-        musicPlayerState.setFullScreenPlayerVisible(false);
-        Navigator.pop(context);
-      },
-      child: Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () {
-              musicPlayerState.setFullScreenPlayerVisible(false);
-              Navigator.pop(context);
-            },
-          ),
-          backgroundColor: Colors.transparent,
-          elevation: 0,
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            musicPlayerState.setFullScreenPlayerVisible(false);
+            Navigator.pop(context);
+          },
         ),
-        body: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [Colors.pinkAccent, Colors.blueAccent],
-            ),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      ),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Colors.pinkAccent, Colors.blueAccent],
           ),
-          child: Center(
-            child: Container(
-              width: 300,
-              height: 500,
-              color: Colors.white.withOpacity(0.5),
-              child: MusicPlayer(
-                songTitle: musicPlayerState.currentSongTitle,
-                artist: musicPlayerState.currentArtist,
-                isPlaying: musicPlayerState.isPlaying,
-                togglePlayPause: musicPlayerState.togglePlayPause,
-                player: musicPlayerState.player,
-              ),
+        ),
+        child: Center(
+          child: Container(
+            width: 300,
+            height: 500,
+            color: Colors.white.withOpacity(0.5),
+            child: MusicPlayer(
+              songTitle: musicPlayerState.currentSongTitle,
+              artist: musicPlayerState.currentArtist,
+              isPlaying: musicPlayerState.isPlaying,
+              togglePlayPause: musicPlayerState.togglePlayPause,
+              player: musicPlayerState.player,
             ),
           ),
         ),
@@ -143,3 +135,4 @@ class MusicPlayer extends StatelessWidget {
     );
   }
 }
+

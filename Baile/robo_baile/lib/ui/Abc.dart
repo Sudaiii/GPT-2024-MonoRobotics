@@ -16,6 +16,11 @@ class _Abc extends State<Abc> {
     final musicPlayerState = Provider.of<MusicPlayerState>(context);
 
     return GestureDetector(
+      onHorizontalDragEnd: (details) {
+        if (details.primaryVelocity != null && details.primaryVelocity! < 0) {
+          musicPlayerState.togglePlayPause();
+        }
+      },
       onTap: () {
         musicPlayerState.setFullScreenPlayerVisible(true);
         Navigator.push(
@@ -36,7 +41,10 @@ class _Abc extends State<Abc> {
               icon: Icon(
                 musicPlayerState.isPlaying ? Icons.pause : Icons.play_arrow,
               ),
-              onPressed: musicPlayerState.togglePlayPause,
+              onPressed:  () {
+
+                // No hacer nada aquí para no pausar/reanudar la canción al hacer clic
+              },
             ),
           ],
         ),
@@ -44,3 +52,5 @@ class _Abc extends State<Abc> {
     );
   }
 }
+
+

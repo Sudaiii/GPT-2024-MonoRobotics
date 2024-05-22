@@ -25,8 +25,6 @@ import 'package:window_size/window_size.dart';
 import 'ui/data_transfer_page.dart';
 import 'ui/infinite_process_page.dart';
 
-// main.dart
-
 void main() {
   setupWindow();
   runApp(
@@ -62,7 +60,9 @@ class HomePage extends StatelessWidget {
       home: DefaultTabController(
         length: 3,
         child: Scaffold(
-          appBar: AppBar(
+          appBar: musicPlayerState.isFullScreenPlayerVisible
+              ? null
+              : AppBar(
             bottom: const TabBar(
               tabs: [
                 Tab(
@@ -103,5 +103,3 @@ class HomePage extends StatelessWidget {
     );
   }
 }
-
-

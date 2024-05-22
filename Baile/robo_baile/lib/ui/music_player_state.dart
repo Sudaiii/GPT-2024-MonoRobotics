@@ -32,5 +32,3 @@ class MusicPlayerState extends ChangeNotifier {
     notifyListeners();
   }
 }
-
-
