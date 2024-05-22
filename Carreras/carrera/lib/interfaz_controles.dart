@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_joystick/flutter_joystick.dart';
 
+import 'package:robocarrera/ui/device_list.dart';
+
 void main() {
   runApp(const JoystickApp());
   // Bloquea la orientación vertical
@@ -84,7 +86,7 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
               physics: NeverScrollableScrollPhysics(),
               children: [
                 Control(),
-                Configuracion(),
+                DeviceList(),
               ],
             ),
           ),
@@ -234,7 +236,7 @@ class _ControlState extends State<Control> {
 }
 
 
-    class Configuracion extends StatelessWidget {
+class Configuracion extends StatelessWidget {
   const Configuracion({Key? key}) : super(key: key);
 
   @override

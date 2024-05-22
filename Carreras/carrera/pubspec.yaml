@@ -1,4 +1,4 @@
-name: animations
+name: robocarrera
 description: A new Flutter project.
 version: 1.0.0+1
 publish_to: none
@@ -16,6 +16,8 @@ dependencies:
     git:
       url: https://github.com/google/flutter-desktop-embedding.git
       path: plugins/window_size
+  flutter_bluetooth_serial: ^0.4.0
+  permission_handler: ^11.2.0
 
 dev_dependencies:
   analysis_defaults:
