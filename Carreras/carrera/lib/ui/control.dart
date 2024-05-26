@@ -1,21 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:robocarrera/controls/control_controller.dart';
+import 'package:robocarrera/controls/joystick_controller.dart';
 import 'joystick_widget.dart';
 import 'buttons_widget.dart';
 
+import 'package:robocarrera/bluetooth/manager.dart';
+
+
+
 class Control extends StatefulWidget {
-  const Control({Key? key}) : super(key: key);
+  final BluetoothManager manager;
+
+  Control({Key? key, required this.manager}) : super(key: key);
 
   @override
   State<Control> createState() => _ControlState();
 }
 
 class _ControlState extends State<Control> {
-  final ControlController _controller = ControlController();
+  final JoystickControllerNotifier _controller = JoystickControllerNotifier();
 
   @override
   void initState() {
     super.initState();
+    _controller.manager = widget.manager;
     _controller.addListener(() {
       setState(() {});
     });

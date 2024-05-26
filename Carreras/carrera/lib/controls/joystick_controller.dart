@@ -1,11 +1,16 @@
 import 'package:flutter_joystick/flutter_joystick.dart';
 import 'package:flutter/material.dart';
 
-class ControlController extends ChangeNotifier {
+import 'package:robocarrera/bluetooth/manager.dart';
+
+
+
+class JoystickControllerNotifier extends ChangeNotifier {
   double joystickX = 20;
   double joystickY = 0;
   final JoystickMode joystickMode = JoystickMode.all;
   int activeButton = 0;
+  late BluetoothManager manager;
 
   void onJoystickMove(StickDragDetails details) {
     double x = details.x;
@@ -14,7 +19,7 @@ class ControlController extends ChangeNotifier {
     int speedY = (y * 255).toInt();
     String data = 'X$speedX Y$speedY\n';
     print('Joystick : data: $data');
-
+    manager.message("L$speedX");
   }
 
   void setActiveButton(int buttonIndex) {
