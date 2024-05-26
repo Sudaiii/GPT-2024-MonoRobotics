@@ -45,6 +45,9 @@ void motor(int left, int right) {
 
 void setup() {
   // Pin setup
+  Serial.begin(9600);
+  Serial.println("ENTER AT Commands:");
+
   pinMode(BIN2  , OUTPUT);
   pinMode(BIN1  , OUTPUT);
   pinMode(AIN1  , OUTPUT);
@@ -53,27 +56,36 @@ void setup() {
 }
 
 void loop() {
-    while (btSerial.available()) {
-        char character = btSerial.read(); 
-        Buffer.concat(character); 
-        if (character == '\n') {
-            btSerial.print("Received: ");
-            btSerial.println(Buffer);
+  if (btSerial.available()) {
+    char character = btSerial.read(); 
+    Serial.print(character);
+    Buffer.concat(character); 
+    if (character == '\n') {
+      btSerial.print("Received: ");
+      btSerial.println(Buffer);
+      Serial.print("Received: ");
+      Serial.println(Buffer);
 
-            if (Buffer.length() > 2) {
-              String wheel = Buffer.substring(0, 1);
-              int speed = Buffer.substring(1, Buffer.length()-1).toInt();
-              if (speed > -255 && speed < 255) {
-                if (wheel == "L") {
-                  left = speed;
-                }
-                else if (wheel == "R") {
-                  right = speed;
-                }
-                motor(left, right);
-              }
-            }
-            Buffer = "";
+      if (Buffer.length() > 2) {
+        String wheel = Buffer.substring(0, 1);
+        int speed = Buffer.substring(1, Buffer.length()-1).toInt();
+        if (speed > -255 && speed < 255) {
+          if (wheel == "L") {
+            left = speed;
+          }
+          else if (wheel == "R") {
+            right = speed;
+          }
+          motor(left, right);
         }
+      }
+      Buffer = "";
     }
+  }
+  if (Serial.available()) {
+    char character = Serial.read(); 
+
+    btSerial.write(character);
+    Serial.println(character);
+  }
 }

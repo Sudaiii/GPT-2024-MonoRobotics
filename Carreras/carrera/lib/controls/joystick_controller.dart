@@ -19,7 +19,7 @@ class JoystickControllerNotifier extends ChangeNotifier {
     int speedY = (y * 255).toInt();
     String data = 'X$speedX Y$speedY\n';
     print('Joystick : data: $data');
-    manager.message("L$speedX");
+    manager.message("L$speedX\n");
   }
 
   void setActiveButton(int buttonIndex) {
