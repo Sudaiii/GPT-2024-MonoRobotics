@@ -5,15 +5,16 @@
 //Bluetooth Serial
 SoftwareSerial btSerial(10, 11); // RX, TX
 //Motor A
-#define AIN1 5
-#define AIN2 6
+#define AIN1 6
+#define AIN2 5
 //Motor B
-#define BIN1 9
-#define BIN2 3
+#define BIN1 3
+#define BIN2 9
 
-String Buffer = "";
-int left = 0;
-int right = 0;
+String buffer = "";
+float leftOffset = 0;
+float rightOffset = 20;
+int speed = 150;
 
 void motorL(int value) {
   if ( value >= 0 ) {
@@ -56,36 +57,64 @@ void setup() {
 }
 
 void loop() {
-  if (btSerial.available()) {
+  while (btSerial.available()) {
     char character = btSerial.read(); 
-    Serial.print(character);
-    Buffer.concat(character); 
+    buffer.concat(character); 
     if (character == '\n') {
+      //Parse message received
       btSerial.print("Received: ");
-      btSerial.println(Buffer);
-      Serial.print("Received: ");
-      Serial.println(Buffer);
+      btSerial.println(buffer);
 
-      if (Buffer.length() > 2) {
-        String wheel = Buffer.substring(0, 1);
-        int speed = Buffer.substring(1, Buffer.length()-1).toInt();
-        if (speed > -255 && speed < 255) {
-          if (wheel == "L") {
-            left = speed;
-          }
-          else if (wheel == "R") {
-            right = speed;
-          }
-          motor(left, right);
+      if (buffer.length() > 2) {
+        int speedX = buffer.substring(buffer.indexOf('X')+1, buffer.indexOf('Y')).toInt();
+        int speedY = buffer.substring(buffer.indexOf('Y')+1, buffer.length()-1).toInt();
+
+        if (
+          speedX > -255 && speedX < 255 
+          && speedY > -255 && speedY < 255
+        ) {
+          chooseDirection(speedX, speedY);
         }
       }
-      Buffer = "";
+      buffer = "";
     }
   }
-  if (Serial.available()) {
+  while (Serial.available()) {
     char character = Serial.read(); 
 
     btSerial.write(character);
     Serial.println(character);
+  }
+}
+
+void chooseDirection(int speedX, int speedY) {
+  int speedL = speed + leftOffset;
+  int speedR = speed + rightOffset;
+  if (
+    speedX > -100 && speedX < 100 
+    && speedY > -100 && speedY < 100
+  ) {  
+    //Close to center, stop
+    motor(0, 0);
+  }
+  else if (abs(speedX) > abs(speedY)) {
+    if (speedX >= 0) {
+      //Right
+      motor(speedL, -speedR);
+    }
+    else {
+      //Left
+      motor(-speedL, speedR);
+    }
+  }
+  else {
+    if (speedY >= 0) {
+      //Forward
+      motor(speedL, speedR);
+    }
+    else {
+      //Backward
+      motor(-speedL, -speedR);
+    }
   }
 }

@@ -51,7 +51,6 @@ class BluetoothManager {
 
   Future<void> message(String message) async {
     if (_connection?.isConnected ?? false) {
-      print(message);
       List<int> list = message.codeUnits;
       Uint8List bytes = Uint8List.fromList(list);
       _connection?.output.add(bytes);
