@@ -62,7 +62,7 @@ class _ControlState extends State<Control> {
                 child: Container(
                   width: MediaQuery.of(context).size.width * 0.2,
                   color: Colors.grey[300],
-                  child: ButtonsWidget(controller: _controller),
+                  child: ButtonsWidget(controller: _controller, manager: widget.manager),
                 ),
               ),
             ),
