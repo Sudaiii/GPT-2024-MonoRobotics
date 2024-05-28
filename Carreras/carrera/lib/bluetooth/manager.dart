@@ -1,10 +1,11 @@
-import 'package:flutter/material.dart';
+import 'dart:typed_data';
+
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 
 class BluetoothManager {
-  late BluetoothConnection _connection;
+  BluetoothConnection? _connection;
   late List<BluetoothDevice> devices;
 
   BluetoothManager(){
@@ -42,11 +43,24 @@ class BluetoothManager {
     devices = await FlutterBluetoothSerial.instance.getBondedDevices();
     try {
       _connection = await BluetoothConnection.toAddress(address);
-      print('Connected to ${address}');
+      print('Connected to $address');
     } catch (error) {
       print('Error connecting to device: $error');
     }
   }
 
+  Future<void> message(String message) async {
+    if (_connection?.isConnected ?? false) {
+      List<int> list = message.codeUnits;
+      Uint8List bytes = Uint8List.fromList(list);
+      _connection?.output.add(bytes);
+      await _connection?.output.allSent;
+    }
+    else {
+      print("Not connected");
+    }
+
+  }
+  
 }
 

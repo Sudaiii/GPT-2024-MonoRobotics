@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 import 'package:robocarrera/bluetooth/device.dart';
 import 'package:robocarrera/bluetooth/manager.dart';
 
 
-class DeviceList extends StatefulWidget {
-  List<Device> devices = [];
-  BluetoothManager manager =  BluetoothManager();
 
-  DeviceList({super.key});
+class DeviceList extends StatefulWidget {
+  final List<Device> devices = [];
+  final BluetoothManager manager;
+
+  DeviceList({Key? key, required this.manager}) : super(key: key);
 
   static int selected = -1;
 
@@ -21,11 +21,9 @@ class DeviceList extends StatefulWidget {
 
 
 class _SongList extends State<DeviceList>{
-
   // Fills list with songs, based on app configuration/memory
   Future _getDevices() async {
     List<BluetoothDevice> devices = await widget.manager.listDevices();
-
     for (BluetoothDevice device in devices){
       String name = "Unknown Device";
       if (device.name != null){
@@ -33,13 +31,7 @@ class _SongList extends State<DeviceList>{
       }
       widget.devices.add(Device(name: name, address: device.address));
     }
-
-    widget.devices.add(
-      Device(
-          name: 'teeest1',
-          address: '123',
-      )
-    );
+    setState(() {widget.devices.length;});
   }
 
 

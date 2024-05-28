@@ -2,8 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:robocarrera/ui/control.dart';
 import 'package:robocarrera/ui/device_list.dart';
 
+import 'package:robocarrera/bluetooth/manager.dart';
+
+
 class MainScreen extends StatefulWidget {
-  const MainScreen({Key? key}) : super(key: key);
+  final BluetoothManager manager =  BluetoothManager();
+
+  MainScreen({Key? key}) : super(key: key);
+
 
   @override
   _MainScreenState createState() => _MainScreenState();
@@ -54,8 +60,8 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
               controller: _tabController,
               physics: NeverScrollableScrollPhysics(),
               children: [
-                Control(),
-                DeviceList(),
+                Control(manager: widget.manager),
+                DeviceList(manager: widget.manager),
               ],
             ),
           ),

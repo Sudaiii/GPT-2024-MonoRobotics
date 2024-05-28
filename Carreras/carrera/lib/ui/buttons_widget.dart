@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:robocarrera/controls/control_controller.dart';
+import 'package:robocarrera/controls/joystick_controller.dart';
 
 class ButtonsWidget extends StatelessWidget {
-  final ControlController controller;
+  final JoystickControllerNotifier controller;
 
   const ButtonsWidget({Key? key, required this.controller}) : super(key: key);
 
