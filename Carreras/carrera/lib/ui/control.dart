@@ -3,10 +3,7 @@ import 'package:robocarrera/controls/joystick_controller.dart';
 import 'joystick_widget.dart';
 import 'buttons_widget.dart';
 import 'dpad_widget.dart';
-
 import 'package:robocarrera/bluetooth/manager.dart';
-
-
 
 class Control extends StatefulWidget {
   final BluetoothManager manager;
@@ -19,6 +16,7 @@ class Control extends StatefulWidget {
 
 class _ControlState extends State<Control> {
   final JoystickControllerNotifier _controller = JoystickControllerNotifier();
+  bool _isDPadSelected = true;
 
   @override
   void initState() {
@@ -50,7 +48,34 @@ class _ControlState extends State<Control> {
               padding: const EdgeInsets.symmetric(vertical: 25.0),
               child: Stack(
                 children: [
-                  DPad(onDirectionChanged: _controller.onDPadDirectionChanged),
+                  _isDPadSelected
+                      ? DPad(onDirectionChanged: _controller.onDPadDirectionChanged)
+                      : JoystickWidget(controller: _controller),
+                  Positioned(
+                    top: 10,
+                    right: 110,
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: ToggleButtons(
+                        isSelected: [_isDPadSelected, !_isDPadSelected],
+                        onPressed: (int index) {
+                          setState(() {
+                            _isDPadSelected = index == 0;
+                          });
+                        },
+                        children: const [
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 16.0),
+                            child: Text('DPad'),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 16.0),
+                            child: Text('Joystick'),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
