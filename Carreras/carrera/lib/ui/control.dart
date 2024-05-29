@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:robocarrera/controls/joystick_controller.dart';
 import 'joystick_widget.dart';
 import 'buttons_widget.dart';
+import 'dpad_widget.dart';
 
 import 'package:robocarrera/bluetooth/manager.dart';
 
@@ -49,7 +50,7 @@ class _ControlState extends State<Control> {
               padding: const EdgeInsets.symmetric(vertical: 25.0),
               child: Stack(
                 children: [
-                  JoystickWidget(controller: _controller),
+                  DPad(onDirectionChanged: _controller.onDPadDirectionChanged),
                 ],
               ),
             ),

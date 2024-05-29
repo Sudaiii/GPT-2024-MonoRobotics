@@ -1,9 +1,6 @@
 import 'package:flutter_joystick/flutter_joystick.dart';
 import 'package:flutter/material.dart';
-
 import 'package:robocarrera/bluetooth/manager.dart';
-
-
 
 class JoystickControllerNotifier extends ChangeNotifier {
   double joystickX = 20;
@@ -19,6 +16,13 @@ class JoystickControllerNotifier extends ChangeNotifier {
     int speedY = (y * 255).toInt();
     print("X$speedX""Y$speedY\n");
     manager.message("X$speedX""Y$speedY\n");
+  }
+
+  void onDPadDirectionChanged(int dx, int dy) {
+    int speedX = (dx * 255).toInt();
+    int speedY = (dy * 255).toInt();
+    print("DPad X$speedX""Y$speedY\n");
+    manager.message("DPad X$speedX""Y$speedY\n");
   }
 
   void setActiveButton(int buttonIndex) {
