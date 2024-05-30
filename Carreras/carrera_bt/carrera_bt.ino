@@ -14,7 +14,7 @@ SoftwareSerial btSerial(10, 11); // RX, TX
 String buffer = "";
 float leftOffset = 0;
 float rightOffset = 20;
-int speed = 150;
+int speed = 0;
 
 void motorL(int value) {
   if ( value >= 0 ) {
@@ -65,16 +65,25 @@ void loop() {
       btSerial.print("Received: ");
       btSerial.println(buffer);
 
-      if (buffer.length() > 2) {
-        int speedX = buffer.substring(buffer.indexOf('X')+1, buffer.indexOf('Y')).toInt();
-        int speedY = buffer.substring(buffer.indexOf('Y')+1, buffer.length()-1).toInt();
-
-        if (
-          speedX > -255 && speedX < 255 
-          && speedY > -255 && speedY < 255
-        ) {
-          chooseDirection(speedX, speedY);
+      if (buffer.length() > 1) {
+        //Change speed
+        String initial = buffer.substring(0, 1);
+        if (initial == "S") {
+          speed = buffer.substring(1, buffer.length()-1).toInt();
         }
+        else {
+          //Change direction
+          int speedX = buffer.substring(buffer.indexOf('X')+1, buffer.indexOf('Y')).toInt();
+          int speedY = buffer.substring(buffer.indexOf('Y')+1, buffer.length()-1).toInt();
+
+          if (
+            speedX > -255 && speedX < 255 
+            && speedY > -255 && speedY < 255
+          ) {
+            chooseDirection(speedX, speedY);
+          }
+        }
+
       }
       buffer = "";
     }
