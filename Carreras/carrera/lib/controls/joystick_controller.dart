@@ -19,10 +19,10 @@ class JoystickControllerNotifier extends ChangeNotifier {
   }
 
   void onDPadDirectionChanged(int dx, int dy) {
-    int speedX = (dx * 255).toInt();
-    int speedY = (dy * 255).toInt();
-    print("DPad X$speedX""Y$speedY\n");
-    manager.message("DPad X$speedX""Y$speedY\n");
+    int speedX = (dx * 254).toInt();
+    int speedY = (dy * 254).toInt();
+    print("X$speedX""Y$speedY\n");
+    manager.message("X$speedX""Y$speedY\n");
   }
 
   void setActiveButton(int buttonIndex) {
