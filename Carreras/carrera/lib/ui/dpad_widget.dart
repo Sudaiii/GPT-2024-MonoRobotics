@@ -17,7 +17,7 @@ class DPad extends StatelessWidget {
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                _buildDirectionButton(Icons.arrow_drop_up, 0, -1),
+                _buildDirectionButton(Icons.arrow_drop_up, 0, 1),
               ],
             ),
             Row(
@@ -31,7 +31,7 @@ class DPad extends StatelessWidget {
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                _buildDirectionButton(Icons.arrow_drop_down, 0, 1),
+                _buildDirectionButton(Icons.arrow_drop_down, 0, -1),
               ],
             ),
           ],

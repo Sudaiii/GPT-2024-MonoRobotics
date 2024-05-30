@@ -55,9 +55,8 @@ class _ButtonsWidgetState extends State<ButtonsWidget> {
       children: [
         ElevatedButton(
           onPressed: () {
-            controller.setActiveButton(3);
-            print('Botón 3 presionado');
-            manager.message("S220\n");
+            _onButtonPressed(3);
+            widget.manager.message("S220\n");
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: _controller.activeButton == 3 ? Colors.red : Colors.black26,
@@ -72,9 +71,8 @@ class _ButtonsWidgetState extends State<ButtonsWidget> {
         ),
         ElevatedButton(
           onPressed: () {
-            controller.setActiveButton(2);
-            print('Botón 2 presionado');
-            manager.message("S170\n");
+            _onButtonPressed(2);
+            widget.manager.message("S170\n");
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: _controller.activeButton == 2 ? Colors.lightBlueAccent : Colors.black26,
@@ -89,9 +87,8 @@ class _ButtonsWidgetState extends State<ButtonsWidget> {
         ),
         ElevatedButton(
           onPressed: () {
-            controller.setActiveButton(1);
-            print('Botón 1 presionado');
-            manager.message("S120\n");
+            _onButtonPressed(1);
+            widget.manager.message("S120\n");
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: _controller.activeButton == 1 ? Colors.pinkAccent : Colors.black26,

@@ -13,7 +13,7 @@ class JoystickControllerNotifier extends ChangeNotifier {
     double x = details.x;
     double y = details.y;
     int speedX = (x * 255).toInt();
-    int speedY = (y * 255).toInt();
+    int speedY = (y * -255).toInt();
     print("X$speedX""Y$speedY\n");
     manager.message("X$speedX""Y$speedY\n");
   }
