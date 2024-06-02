@@ -15,6 +15,7 @@ String buffer = "";
 float leftOffset = 0;
 float rightOffset = 20;
 int speed = 0;
+int direction = 0; //1 right, 2 left, 3 forward, 4 backward
 
 void motorL(int value) {
   if ( value >= 0 ) {
@@ -73,14 +74,14 @@ void loop() {
         }
         else {
           //Change direction
-          int speedX = buffer.substring(buffer.indexOf('X')+1, buffer.indexOf('Y')).toInt();
-          int speedY = buffer.substring(buffer.indexOf('Y')+1, buffer.length()-1).toInt();
+          int directionX = buffer.substring(buffer.indexOf('X')+1, buffer.indexOf('Y')).toInt();
+          int directionY = buffer.substring(buffer.indexOf('Y')+1, buffer.length()-1).toInt();
 
           if (
-            speedX > -255 && speedX < 255 
-            && speedY > -255 && speedY < 255
+            directionX > -255 && directionX < 255 
+            && directionY > -255 && directionY < 255
           ) {
-            chooseDirection(speedX, speedY);
+            chooseDirection(directionX, directionY);
           }
         }
 
@@ -96,33 +97,53 @@ void loop() {
   }
 }
 
-void chooseDirection(int speedX, int speedY) {
+void chooseDirection(int directionX, int directionY) {
   int speedL = speed + leftOffset;
   int speedR = speed + rightOffset;
   if (
-    speedX > -100 && speedX < 100 
-    && speedY > -100 && speedY < 100
+    directionX > -100 && directionX < 100 
+    && directionY > -100 && directionY < 100
   ) {  
     //Close to center, stop
     motor(0, 0);
   }
-  else if (abs(speedX) > abs(speedY)) {
-    if (speedX >= 0) {
+  else if (abs(directionX) > abs(directionY)) {
+    if (directionX >= 0) {
       //Right
+      if (direction != 1) {
+        motor(0, 0);
+        delay(200);
+        direction = 1;
+      }
       motor(speedL, -speedR);
     }
     else {
       //Left
+      if (direction != 2) {
+        motor(0, 0);
+        delay(200);
+        direction = 2;
+      }
       motor(-speedL, speedR);
     }
   }
   else {
-    if (speedY >= 0) {
+    if (directionY >= 0) {
       //Forward
+      if (direction != 3) {
+        motor(0, 0);
+        delay(200);
+        direction = 3;
+      }
       motor(speedL, speedR);
     }
     else {
       //Backward
+      if (direction != 4) {
+        motor(0, 0);
+        delay(200);
+        direction = 4;
+      }
       motor(-speedL, -speedR);
     }
   }
