@@ -12,10 +12,16 @@ SoftwareSerial btSerial(10, 11); // RX, TX
 #define BIN2 9
 
 String buffer = "";
-float leftOffset = 0;
-float rightOffset = 20;
+int leftOffset = 0;
+int rightOffset = 20;
 int speed = 0;
+int speedL = 0;
+int speedR = 0;
+int speedCategory = 0;
+int valueX = 0;
+int valueY = 0;
 int direction = 0; //1 right, 2 left, 3 forward, 4 backward
+
 
 void motorL(int value) {
   if ( value >= 0 ) {
@@ -70,18 +76,20 @@ void loop() {
         //Change speed
         String initial = buffer.substring(0, 1);
         if (initial == "S") {
-          speed = buffer.substring(1, buffer.length()-1).toInt();
+          speedCategory = buffer.substring(1, buffer.length()-1).toInt();
+          setBaseSpeed();
+          chooseDirection();
         }
         else {
           //Change direction
-          int directionX = buffer.substring(buffer.indexOf('X')+1, buffer.indexOf('Y')).toInt();
-          int directionY = buffer.substring(buffer.indexOf('Y')+1, buffer.length()-1).toInt();
+          valueX = buffer.substring(buffer.indexOf('X')+1, buffer.indexOf('Y')).toInt();
+          valueY = buffer.substring(buffer.indexOf('Y')+1, buffer.length()-1).toInt();
 
           if (
-            directionX > -255 && directionX < 255 
-            && directionY > -255 && directionY < 255
+            valueX > -255 && valueX < 255 
+            && valueY > -255 && valueY < 255
           ) {
-            chooseDirection(directionX, directionY);
+            chooseDirection();
           }
         }
 
@@ -97,54 +105,72 @@ void loop() {
   }
 }
 
-void chooseDirection(int directionX, int directionY) {
-  int speedL = speed + leftOffset;
-  int speedR = speed + rightOffset;
+void setBaseSpeed() {
+  if (speedCategory == 3) {
+    speed = 160;
+  }
+  
+  else if (speedCategory == 2) {
+    speed = 140;
+  }
+  
+  else if (speedCategory == 1) {
+    speed = 120;
+  }
+  else {
+    speed = 0;
+  }
+}
+
+void chooseDirection() {
+  int targetL = speed + leftOffset;
+  int targetR = speed + rightOffset;
   if (
-    directionX > -100 && directionX < 100 
-    && directionY > -100 && directionY < 100
+    valueX > -100 && valueX < 100 
+    && valueY > -100 && valueY < 100
   ) {  
     //Close to center, stop
-    motor(0, 0);
+    changeSpeed(0, 0);
   }
-  else if (abs(directionX) > abs(directionY)) {
-    if (directionX >= 0) {
+  else if (abs(valueX) > abs(valueY)) {
+    if (valueX >= 0) {
       //Right
-      if (direction != 1) {
-        motor(0, 0);
-        delay(200);
-        direction = 1;
-      }
-      motor(speedL, -speedR);
+      changeSpeed(targetL, -targetR);
     }
     else {
       //Left
-      if (direction != 2) {
-        motor(0, 0);
-        delay(200);
-        direction = 2;
-      }
-      motor(-speedL, speedR);
+      changeSpeed(-targetL, targetR);
     }
   }
   else {
-    if (directionY >= 0) {
+    if (valueY >= 0) {
       //Forward
-      if (direction != 3) {
-        motor(0, 0);
-        delay(200);
-        direction = 3;
-      }
-      motor(speedL, speedR);
+      changeSpeed(targetL, targetR);
     }
     else {
       //Backward
-      if (direction != 4) {
-        motor(0, 0);
-        delay(200);
-        direction = 4;
-      }
-      motor(-speedL, -speedR);
+      changeSpeed(-targetL, -targetR);
     }
+  }
+}
+
+void changeSpeed(int targetL, int targetR){
+  while (speedL != targetL || speedR != targetR) {
+    if (speedL > targetL) {
+      speedL = speedL - 20;
+    }
+    else if (speedL < targetL) {
+      speedL = speedL + 20;
+    }
+
+    if (speedR > targetR) {
+      speedR = speedR - 20;
+    }
+    else if (speedR < targetR) {
+      speedR = speedR + 20;
+    }
+
+    motor(speedL, speedR);
+    delay(5);
   }
 }
