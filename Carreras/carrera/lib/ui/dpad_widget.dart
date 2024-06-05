@@ -67,7 +67,7 @@ class _DPadState extends State<DPad> {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: BoxDecoration(
-        color: _pressedButton == index ? Colors.grey : Colors.black26, // Change color on press
+        color: _pressedButton == index ? Colors.grey : Colors.orange.shade200, // Change color on press
         border: Border.all(color: Colors.black87), // Border color and width
         borderRadius: BorderRadius.circular(10.0), // Rounded corners
       ),

@@ -21,7 +21,7 @@ class JoystickWidget extends StatelessWidget {
           color: Colors.black12,
           borderRadius: BorderRadius.circular(joystickSize/2),
           border: Border.all(
-            color: Colors.purple,
+            color: Colors.orangeAccent,
             width: 2.0,
           ),
         ),

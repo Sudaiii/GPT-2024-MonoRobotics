@@ -50,9 +50,9 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
                 Tab(icon: Icon(Icons.settings, color: Colors.black), text: 'Configuración'),
               ],
               labelStyle: TextStyle(fontSize: 14.0),
-              labelColor: Colors.purple,
+              labelColor: Colors.orangeAccent,
               unselectedLabelColor: Colors.black,
-              indicatorColor: Colors.purple,
+              indicatorColor: Colors.orangeAccent,
             ),
           ),
           Expanded(

@@ -81,6 +81,9 @@ class _ControlState extends State<Control> {
                           SharedPreferences prefs = await SharedPreferences.getInstance();
                           await prefs.setInt('selected_button_index', index);
                         },
+                        color: Colors.black, // Color del texto cuando no está seleccionado
+                        selectedColor: Colors.orangeAccent, // Color del texto cuando está seleccionado
+                        borderRadius: BorderRadius.circular(20),
                         children: const [
                           Padding(
                             padding: EdgeInsets.symmetric(horizontal: 16.0),
@@ -103,10 +106,13 @@ class _ControlState extends State<Control> {
               padding: const EdgeInsets.symmetric(vertical: 30.0, horizontal: 0.0),
               child: Align(
                 alignment: Alignment.centerLeft,
-                child: Container(
-                  width: MediaQuery.of(context).size.width * 0.2,
-                  color: Colors.grey[300],
-                  child: ButtonsWidget(controller: _controller, manager: widget.manager),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20), // Radio del borde
+                  child: Container(
+                    width: MediaQuery.of(context).size.width * 0.2,
+                    color: Colors.orange[100],
+                    child: ButtonsWidget(controller: _controller, manager: widget.manager),
+                  ),
                 ),
               ),
             ),
