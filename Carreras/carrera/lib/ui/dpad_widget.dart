@@ -48,11 +48,20 @@ class DPad extends StatelessWidget {
         border: Border.all(color: Colors.black87), // Border color and width
         borderRadius: BorderRadius.circular(10.0), // Rounded corners
       ),
-      child: IconButton(
-        icon: Icon(icon),
-        onPressed: () {
+      child: GestureDetector(
+        onTapDown: (_) {
           onDirectionChanged(dx, dy);
         },
+        onTapUp: (_) {
+          onDirectionChanged(0, 0);
+        },
+        onTapCancel: () {
+          onDirectionChanged(0, 0);
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Icon(icon),
+        ),
       ),
     );
   }
