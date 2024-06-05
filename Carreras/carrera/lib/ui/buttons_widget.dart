@@ -56,7 +56,7 @@ class _ButtonsWidgetState extends State<ButtonsWidget> {
         ElevatedButton(
           onPressed: () {
             _onButtonPressed(3);
-            widget.manager.message("S220\n");
+            widget.manager.message("S3\n");
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: _controller.activeButton == 3 ? Colors.red : Colors.black26,
@@ -72,7 +72,7 @@ class _ButtonsWidgetState extends State<ButtonsWidget> {
         ElevatedButton(
           onPressed: () {
             _onButtonPressed(2);
-            widget.manager.message("S170\n");
+            widget.manager.message("S2\n");
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: _controller.activeButton == 2 ? Colors.lightBlueAccent : Colors.black26,
@@ -88,7 +88,7 @@ class _ButtonsWidgetState extends State<ButtonsWidget> {
         ElevatedButton(
           onPressed: () {
             _onButtonPressed(1);
-            widget.manager.message("S120\n");
+            widget.manager.message("S1\n");
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: _controller.activeButton == 1 ? Colors.pinkAccent : Colors.black26,
