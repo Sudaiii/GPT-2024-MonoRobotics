@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:robocarrera/controls/joystick_controller.dart';
 import 'joystick_widget.dart';
 import 'buttons_widget.dart';
@@ -73,6 +74,7 @@ class _ControlState extends State<Control> {
                         onPressed: (int index) async {
                           setState(() {
                             _isDPadSelected = index == 0;
+                            HapticFeedback.vibrate();
                           });
 
                           // Guardar el índice del botón presionado en las preferencias compartidas

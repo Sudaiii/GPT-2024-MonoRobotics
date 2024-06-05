@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:robocarrera/controls/joystick_controller.dart';
 
@@ -55,6 +56,7 @@ class _ButtonsWidgetState extends State<ButtonsWidget> {
       children: [
         ElevatedButton(
           onPressed: () {
+            HapticFeedback.lightImpact();
             _onButtonPressed(3);
             widget.manager.message("S3\n");
           },
@@ -71,6 +73,7 @@ class _ButtonsWidgetState extends State<ButtonsWidget> {
         ),
         ElevatedButton(
           onPressed: () {
+            HapticFeedback.mediumImpact();
             _onButtonPressed(2);
             widget.manager.message("S2\n");
           },
@@ -87,6 +90,7 @@ class _ButtonsWidgetState extends State<ButtonsWidget> {
         ),
         ElevatedButton(
           onPressed: () {
+            HapticFeedback.heavyImpact();
             _onButtonPressed(1);
             widget.manager.message("S1\n");
           },

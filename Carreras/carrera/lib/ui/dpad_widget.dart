@@ -18,7 +18,7 @@ class _DPadState extends State<DPad> {
       _pressedButton = buttonIndex;
     });
     widget.onDirectionChanged(dx, dy);
-    HapticFeedback.heavyImpact();
+    HapticFeedback.vibrate();
   }
 
   void _handleDirectionEnd() {
