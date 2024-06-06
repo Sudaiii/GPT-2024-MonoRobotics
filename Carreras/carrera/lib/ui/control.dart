@@ -51,7 +51,7 @@ class _ControlState extends State<Control> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.white,
+      color: Colors.orange.shade50,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -82,8 +82,9 @@ class _ControlState extends State<Control> {
                           await prefs.setInt('selected_button_index', index);
                         },
                         color: Colors.black, // Color del texto cuando no está seleccionado
-                        selectedColor: Colors.orangeAccent, // Color del texto cuando está seleccionado
+                        selectedColor: Colors.black87, // Color del texto cuando está seleccionado
                         borderRadius: BorderRadius.circular(20),
+                        fillColor: Colors.orange.shade200,
                         children: const [
                           Padding(
                             padding: EdgeInsets.symmetric(horizontal: 16.0),

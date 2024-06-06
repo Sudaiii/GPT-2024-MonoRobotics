@@ -34,25 +34,29 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('RoboRun'),
+        title: const Text('RoboRun' , style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 24,
+        ),),
         centerTitle: true,
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.brown,
         toolbarHeight: 20.0,
       ),
       body: Column(
         children: [
           ColoredBox(
-            color: Colors.white,
+            color: Colors.brown,
             child: TabBar(
               controller: _tabController,
               tabs: [
-                Tab(icon: Icon(Icons.gamepad, color: Colors.black), text: 'Control'),
-                Tab(icon: Icon(Icons.settings, color: Colors.black), text: 'Configuración'),
+                Tab(icon: Icon(Icons.gamepad, color: Colors.white), text: 'Control'),
+                Tab(icon: Icon(Icons.settings, color: Colors.white), text: 'Configuración'),
               ],
               labelStyle: TextStyle(fontSize: 14.0),
-              labelColor: Colors.orangeAccent,
+              labelColor: Colors.white,
               unselectedLabelColor: Colors.black,
-              indicatorColor: Colors.orangeAccent,
+              indicatorColor: Colors.orange.shade900,
             ),
           ),
           Expanded(
