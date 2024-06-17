@@ -15,8 +15,8 @@ class Device {
   });
 
 
-  Widget buildTitle(BuildContext context) => Text(address);
-  Widget buildSubtitle(BuildContext context) => Text(name);
+  Widget buildTitle(BuildContext context) => Text(name);
+  Widget buildSubtitle(BuildContext context) => Text(address);
 
 
 }

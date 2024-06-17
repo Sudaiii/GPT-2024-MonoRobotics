@@ -4,6 +4,8 @@ import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 
 import 'package:robocarrera/bluetooth/device.dart';
 import 'package:robocarrera/bluetooth/manager.dart';
+import 'package:robocarrera/ui/dialog_factory.dart';
+
 
 
 
@@ -11,16 +13,16 @@ class DeviceList extends StatefulWidget {
   final List<Device> devices = [];
   final BluetoothManager manager;
 
-  DeviceList({Key? key, required this.manager}) : super(key: key);
+  DeviceList({super.key, required this.manager});
 
   static int selected = -1;
 
   @override
-  _SongList createState() => _SongList();
+  SongList createState() => SongList();
 }
 
 
-class _SongList extends State<DeviceList>{
+class SongList extends State<DeviceList>{
   // Fills list with songs, based on app configuration/memory
   Future _getDevices() async {
     List<BluetoothDevice> devices = await widget.manager.listDevices();
@@ -32,6 +34,31 @@ class _SongList extends State<DeviceList>{
       widget.devices.add(Device(name: name, address: device.address));
     }
     setState(() {widget.devices.length;});
+  }
+
+
+  Future __connect(int index) async {
+    String address = widget.devices[index].address;
+
+    bool success = await widget.manager.connect(address);
+    if (success) {
+      DeviceList.selected = index;
+      widget.devices[index].name = "${widget.devices[index].name} ✔️";
+      setState(() {widget.devices.length;});
+    }
+    else {
+      await showDialog(
+          context: context,
+          builder: (context) {
+            return build_dialog(
+              context,
+              "Error de conexión",
+              "No se ha podido establecer una conexión con el dispositivo $address.",
+              "Ok"
+            );
+          }
+      );
+    }
   }
 
 
@@ -53,6 +80,7 @@ class _SongList extends State<DeviceList>{
     return MaterialApp(
       title: title,
       home: Scaffold(
+        backgroundColor: Colors.orange.shade50,
         body: ListView.builder(
           // Let the ListView know how many items it needs to build.
           itemCount: items.length,
@@ -65,8 +93,7 @@ class _SongList extends State<DeviceList>{
                 title: item.buildTitle(context),
                 subtitle: item.buildSubtitle(context),
                 onTap: () {
-                  DeviceList.selected = index;
-                  widget.manager.connect(items[index].address);
+                  __connect(index);
                 }
             );
           },

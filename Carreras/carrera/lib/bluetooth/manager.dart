@@ -39,13 +39,18 @@ class BluetoothManager {
   }
 
 
-  Future<void> connect(String address) async {
+  Future<bool> connect(String address) async {
     devices = await FlutterBluetoothSerial.instance.getBondedDevices();
     try {
       _connection = await BluetoothConnection.toAddress(address);
-      print('Connected to $address');
+      _connection!.input!.listen(null).onDone(() {
+        print("Desconectado :(");
+        // Agregar una lista de listeners a los cuales notificar desconexion
+      });
+      return true;
     } catch (error) {
       print('Error connecting to device: $error');
+      return false;
     }
   }
 
