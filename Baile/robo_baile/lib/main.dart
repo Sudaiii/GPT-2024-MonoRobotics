@@ -20,9 +20,11 @@ import 'package:flutter/material.dart';
 import 'package:robobaile/ui/songs_list.dart';
 import 'package:window_size/window_size.dart';
 
-import 'ui/config.dart';
+import 'bluetooth/manager.dart';
+import 'ui/device_list.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   setupWindow();
   runApp(
     MaterialApp(
@@ -42,10 +44,30 @@ void setupWindow() {
   }
 }
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  final BluetoothManager manager =  BluetoothManager();
   HomePage({super.key});
 
-  Widget? _child; // Variable para manejar el estado
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+
+class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin{
+  //Widget? _child; // Variable para manejar el estado
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +97,7 @@ class HomePage extends StatelessWidget {
                 child: TabBarView(
                   children: [
                     SongList(),
-                    Config(),
+                    DeviceList(manager: widget.manager),
                   ],
                 ),
               ),

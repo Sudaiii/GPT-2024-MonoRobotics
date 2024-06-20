@@ -1,6 +1,7 @@
 import 'dart:io' show File, Platform;
 import 'dart:typed_data';
 
+import 'package:file_selector/file_selector.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_media_metadata/flutter_media_metadata.dart';
