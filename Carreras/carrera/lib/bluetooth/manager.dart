@@ -9,6 +9,7 @@ import 'package:robocarrera/bluetooth/bluetooth_listener.dart';
 
 class BluetoothManager {
   BluetoothConnection? _connection;
+  bool get isConnected => _connection != null;
   late List<BluetoothDevice> devices;
   late List<BluetoothListener> listeners;
 

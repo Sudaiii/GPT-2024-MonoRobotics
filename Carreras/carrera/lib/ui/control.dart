@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:robocarrera/controls/joystick_controller.dart';
@@ -19,32 +21,35 @@ class Control extends StatefulWidget {
 class _ControlState extends State<Control> {
   final JoystickControllerNotifier _controller = JoystickControllerNotifier();
   bool _isDPadSelected = true;
+  bool _controlsEnabled = false; // Variable para controlar la habilitación de los controles
+
+  Timer? _timer; // Variable para almacenar el timer
 
   @override
   void initState() {
     super.initState();
-    _controller.manager = widget.manager;
-    _controller.addListener(() {
-      setState(() {});
-    });
-    _loadSelectedButtonIndex(); // Cargar el estado del botón seleccionado al iniciar
+    _checkConnection(); // Verificar conexión al iniciar
+    _startPeriodicCheck(); // Iniciar verificación periódica
   }
 
-  _loadSelectedButtonIndex() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    int? selectedButtonIndex = prefs.getInt('selected_button_index');
-    if (selectedButtonIndex != null) {
-      setState(() {
-        _isDPadSelected = selectedButtonIndex == 0;
-      });
-    }
+  void _startPeriodicCheck() {
+    const checkInterval = Duration(seconds: 2); // Intervalo de verificación
+
+    _timer = Timer.periodic(checkInterval, (timer) {
+      _checkConnection(); // Llamar a la función de verificación de conexión
+    });
+  }
+
+  _checkConnection() async {
+    bool isConnected = widget.manager.isConnected;
+    setState(() {
+      _controlsEnabled = isConnected;
+    });
   }
 
   @override
   void dispose() {
-    _controller.removeListener(() {
-      setState(() {});
-    });
+    _timer?.cancel(); // Cancelar el timer al destruir el widget
     super.dispose();
   }
 
@@ -52,74 +57,85 @@ class _ControlState extends State<Control> {
   Widget build(BuildContext context) {
     return Container(
       color: Colors.orange.shade50,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Expanded(
-            flex: 3,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 25.0),
-              child: Stack(
-                children: [
-                  _isDPadSelected
-                      ? DPad(onDirectionChanged: _controller.onDPadDirectionChanged)
-                      : JoystickWidget(controller: _controller),
-                  Positioned(
-                    top: 0,
-                    right: 120,
-                    child: Align(
-                      alignment: Alignment.centerRight,
-                      child: ToggleButtons(
-                        isSelected: [_isDPadSelected, !_isDPadSelected],
-                        onPressed: (int index) async {
-                          setState(() {
-                            _isDPadSelected = index == 0;
-                            HapticFeedback.vibrate();
-                          });
+      child: _controlsEnabled ? buildControls() : buildNoConnectionMessage(),
+    );
+  }
 
-                          // Guardar el índice del botón presionado en las preferencias compartidas
-                          SharedPreferences prefs = await SharedPreferences.getInstance();
-                          await prefs.setInt('selected_button_index', index);
-                        },
-                        color: Colors.black, // Color del texto cuando no está seleccionado
-                        selectedColor: Colors.black87, // Color del texto cuando está seleccionado
-                        borderRadius: BorderRadius.circular(20),
-                        fillColor: Colors.orange.shade200,
-                        children: const [
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 16.0),
-                            child: Text('DPad'),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 16.0),
-                            child: Text('Joystick'),
-                          ),
-                        ],
-                      ),
+  Widget buildControls() {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Expanded(
+          flex: 3,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 25.0),
+            child: Stack(
+              children: [
+                _isDPadSelected
+                    ? DPad(onDirectionChanged: _controller.onDPadDirectionChanged)
+                    : JoystickWidget(controller: _controller),
+                Positioned(
+                  top: 0,
+                  right: 120,
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: ToggleButtons(
+                      isSelected: [_isDPadSelected, !_isDPadSelected],
+                      onPressed: (int index) async {
+                        setState(() {
+                          _isDPadSelected = index == 0;
+                          HapticFeedback.vibrate();
+                        });
+
+                        // Guardar el índice del botón presionado en las preferencias compartidas
+                        SharedPreferences prefs = await SharedPreferences.getInstance();
+                        await prefs.setInt('selected_button_index', index);
+                      },
+                      color: Colors.black,
+                      selectedColor: Colors.black87,
+                      borderRadius: BorderRadius.circular(20),
+                      fillColor: Colors.orange.shade200,
+                      children: const [
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 16.0),
+                          child: Text('DPad'),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 16.0),
+                          child: Text('Joystick'),
+                        ),
+                      ],
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 30.0, horizontal: 0.0),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(20), // Radio del borde
-                  child: Container(
-                    width: MediaQuery.of(context).size.width * 0.2,
-                    color: Colors.orange[100],
-                    child: ButtonsWidget(controller: _controller, manager: widget.manager),
-                  ),
+        ),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 30.0, horizontal: 0.0),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(20),
+                child: Container(
+                  width: MediaQuery.of(context).size.width * 0.2,
+                  color: Colors.orange[100],
+                  child: ButtonsWidget(controller: _controller, manager: widget.manager),
                 ),
               ),
             ),
           ),
-        ],
-      ),
+        ),
+      ],
+    );
+  }
+
+  Widget buildNoConnectionMessage() {
+    return Center(
+      child: Text('Conéctese a un dispositivo para habilitar los controles.'),
     );
   }
 }
+
