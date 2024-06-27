@@ -1,14 +1,13 @@
-// song_list.dart
-import 'dart:io' show File;
+// ui/song_list.dart
 import 'dart:typed_data';
-
+import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_media_metadata/flutter_media_metadata.dart';
 import 'package:provider/provider.dart';
 import 'package:robobaile/models/song.dart';
 import 'package:robobaile/ui/music_player_state.dart';
-import 'package:robobaile/ui/MyApp.dart';
+import 'package:robobaile/ui/music_player.dart';
 
 class SongList extends StatefulWidget {
   List<Song> songs = [];
@@ -23,16 +22,8 @@ class SongList extends StatefulWidget {
 class _SongList extends State<SongList> {
   Future _getSongs() async {
     widget.songs = [
-      Song(
-        songUrl: 'assets/audio/pixabay_audio.mp3',
-        title: 'Song B',
-        artist: 'Artist B',
-      ),
-      Song(
-        songUrl: 'assets/audio/pixabay_audio.mp3',
-        title: 'Song C',
-        artist: 'Artist C',
-      ),
+      Song(songUrl: 'assets/audio/pixabay_audio.mp3', title: 'Song B', artist: 'Artist B'),
+      Song(songUrl: 'assets/audio/pixabay_audio.mp3', title: 'Song C', artist: 'Artist C'),
     ];
   }
 
@@ -52,15 +43,14 @@ class _SongList extends State<SongList> {
 
   @override
   Widget build(BuildContext context) {
-    const title = 'Lista canciones';
-
+    final title = 'Lista canciones';
     final items = widget.songs;
 
     return MaterialApp(
       title: title,
       home: Scaffold(
         appBar: AppBar(
-          title: const Text(title),
+          title: Text(title),
         ),
         body: Column(
           children: [
@@ -69,7 +59,6 @@ class _SongList extends State<SongList> {
                 itemCount: items.length,
                 itemBuilder: (context, index) {
                   final item = items[index];
-
                   return ListTile(
                     title: item.buildTitle(context),
                     subtitle: item.buildArtist(context),
@@ -78,12 +67,7 @@ class _SongList extends State<SongList> {
                       final musicPlayerState = Provider.of<MusicPlayerState>(context, listen: false);
                       musicPlayerState.playSong(item.title, item.artist, item.songUrl);
                       musicPlayerState.setFullScreenPlayerVisible(true);
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const MyApp(),
-                        ),
-                      );
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => const MyApp()));
                     },
                   );
                 },
@@ -93,33 +77,22 @@ class _SongList extends State<SongList> {
               padding: const EdgeInsets.all(16.0),
               child: ElevatedButton(
                 onPressed: () async {
-                  FilePickerResult? result = await FilePicker.platform.pickFiles(
-                    type: FileType.audio,
-                    allowMultiple: false,
-                  );
+                  FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.audio, allowMultiple: false);
                   if (result != null) {
                     final filePath = result.files.single.path;
                     print('Ruta archivo: $filePath');
-                    await MetadataRetriever.fromFile(File(filePath!))
-                        .then((metadata) async {
-                      String title =  metadata.trackName ?? "MISSING TITLE";
+                    await MetadataRetriever.fromFile(File(filePath!)).then((metadata) {
+                      String title = metadata.trackName ?? "MISSING TITLE";
                       String artist = metadata.authorName ?? "MISSING AUTHOR";
                       Uint8List? image = metadata.albumArt;
                       print(title);
                       print(artist);
                       print(filePath);
-                      Song newSong = Song(
-                        songUrl: filePath,
-                        title: title,
-                        artist: artist,
-                        image: image,
-                      );
+                      Song newSong = Song(songUrl: filePath, title: title, artist: artist, image: image);
                       addSong(newSong);
                     }).catchError((_) {
                       setState(() {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('No se pudieron extraer los metadatos')),
-                        );
+                        // Handle error
                       });
                     });
                   }

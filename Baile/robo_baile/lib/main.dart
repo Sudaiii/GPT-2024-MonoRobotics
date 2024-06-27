@@ -3,18 +3,19 @@ import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:robobaile/ui/Abc.dart';
-import 'package:robobaile/ui/music_player_state.dart';
-import 'package:robobaile/ui/song_list.dart';
-import 'package:robobaile/ui/config.dart';
 import 'package:window_size/window_size.dart';
+import 'package:robobaile/ui/song_list.dart';
+import 'package:robobaile/ui/device_list.dart';
+import 'package:robobaile/ui/music_player_state.dart';
+import 'package:robobaile/bluetooth/manager.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   setupWindow();
   runApp(
     ChangeNotifierProvider(
       create: (context) => MusicPlayerState(),
-      child: const MaterialApp(
+      child: MaterialApp(
         home: HomePage(),
       ),
     ),
@@ -32,8 +33,28 @@ void setupWindow() {
   }
 }
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class HomePage extends StatefulWidget {
+  final BluetoothManager manager = BluetoothManager();
+  HomePage({super.key});
+
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,25 +63,13 @@ class HomePage extends StatelessWidget {
     return MaterialApp(
       theme: ThemeData.light(),
       home: DefaultTabController(
-        length: 3,
+        length: 2,
         child: Scaffold(
-          appBar: musicPlayerState.isFullScreenPlayerVisible
-              ? null
-              : AppBar(
+          appBar: AppBar(
             bottom: const TabBar(
               tabs: [
-                Tab(
-                  icon: Icon(Icons.music_note, color: Colors.green),
-                  text: 'Música',
-                ),
-                Tab(
-                  icon: Icon(Icons.settings),
-                  text: 'Configuración',
-                ),
-                Tab(
-                  icon: Icon(Icons.bluetooth, color: Colors.blue),
-                  text: 'Bluetooth',
-                ),
+                Tab(icon: Icon(Icons.music_note, color: Colors.green), text: 'Música'),
+                Tab(icon: Icon(Icons.settings), text: 'Configuración'),
               ],
             ),
             title: const Text('Robobaile'),
@@ -70,15 +79,19 @@ class HomePage extends StatelessWidget {
               TabBarView(
                 children: [
                   SongList(),
-                  const Config(),
-                  const Config(), // Opción de Bluetooth
+                  DeviceList(manager: widget.manager),
                 ],
               ),
-              if (musicPlayerState.isPlaying &&
-                  !musicPlayerState.isFullScreenPlayerVisible)
-                const Align(
+              if (musicPlayerState.isPlaying && !musicPlayerState.isFullScreenPlayerVisible)
+                Align(
                   alignment: Alignment.bottomCenter,
-                  child: Abc(),
+                  child: MusicPlayer(
+                    songTitle: musicPlayerState.currentSongTitle,
+                    artist: musicPlayerState.currentArtist,
+                    isPlaying: musicPlayerState.isPlaying,
+                    togglePlayPause: musicPlayerState.togglePlayPause,
+                    player: musicPlayerState.player,
+                  ),
                 ),
             ],
           ),

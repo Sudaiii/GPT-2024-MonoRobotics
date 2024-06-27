@@ -1,8 +1,9 @@
+// ui/music_player.dart
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:robobaile/ui/music_player_state.dart';
-import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:provider/provider.dart';
+import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
+import 'package:robobaile/ui/music_player_state.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -10,7 +11,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final musicPlayerState = Provider.of<MusicPlayerState>(context);
-
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -106,13 +106,13 @@ class MusicPlayer extends StatelessWidget {
             IconButton(
               icon: const Icon(Icons.skip_previous),
               onPressed: () {
-                // Lógica para reproducir la canción anterior
+                // Logic to play previous song
               },
             ),
             IconButton(
               icon: const Icon(Icons.skip_next),
               onPressed: () {
-                // Lógica para reproducir la siguiente canción
+                // Logic to play next song
               },
             ),
           ],
@@ -135,4 +135,3 @@ class MusicPlayer extends StatelessWidget {
     );
   }
 }
-
