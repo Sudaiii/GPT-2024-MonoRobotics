@@ -86,7 +86,7 @@ class SongList extends State<DeviceList> implements BluetoothListener {
             return build_dialog(
                 context,
                 "Error de conexión",
-                "Se ha perdido la conexión al dispostivo $name.",
+                "Se ha perdido la conexión al dispositivo $name.",
                 "Ok"
             );
           }
