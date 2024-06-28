@@ -22,6 +22,8 @@ class DeviceList extends StatefulWidget{
 
 
 class SongList extends State<DeviceList> implements BluetoothListener {
+  bool isConnecting = false;
+
   // Fills list with songs, based on app configuration/memory
   Future _getDevices() async {
     List<BluetoothDevice> devices = await widget.manager.listDevices();
@@ -37,6 +39,9 @@ class SongList extends State<DeviceList> implements BluetoothListener {
 
 
   Future __connect(int index) async {
+    setState(() {
+      isConnecting = true;
+    });
     widget.manager.disconnectDevice();
     String address = widget.devices[index].address;
     String name = widget.devices[index].name;
@@ -60,16 +65,19 @@ class SongList extends State<DeviceList> implements BluetoothListener {
           context: context,
           builder: (context) {
             return build_dialog(
-              context,
-              "Error de conexión",
-              "No se ha podido establecer una conexión con el dispositivo $name.",
-              "Ok"
+                context,
+                "Error de conexión",
+                "No se ha podido establecer una conexión con el dispositivo $name.",
+                "Ok"
             );
           }
       );
       DeviceList.selected = -1;
     }
-    setState(() {widget.devices.length;});
+    setState(() {
+      widget.devices.length;
+      isConnecting = false;
+    });
   }
 
   @override
@@ -93,7 +101,6 @@ class SongList extends State<DeviceList> implements BluetoothListener {
       );
       setState(() {widget.devices.length;});
     }
-
   }
 
 
@@ -117,25 +124,36 @@ class SongList extends State<DeviceList> implements BluetoothListener {
       title: title,
       home: Scaffold(
         backgroundColor: Colors.orange.shade50,
-        body: ListView.builder(
-          // Let the ListView know how many items it needs to build.
-          itemCount: items.length,
-          // Provide a builder function. This is where the magic happens.
-          // Convert each item into a widget based on the type of item it is.
-          itemBuilder: (context, index) {
-            final item = items[index];
+        body: Stack(
+          children: [
+            ListView.builder(
+              // Let the ListView know how many items it needs to build.
+              itemCount: items.length,
+              // Provide a builder function. This is where the magic happens.
+              // Convert each item into a widget based on the type of item it is.
+              itemBuilder: (context, index) {
+                final item = items[index];
 
-            return ListTile(
-                title: item.buildTitle(context),
-                subtitle: item.buildSubtitle(context),
-                onTap: () {
-                  if (DeviceList.selected != -2) {
-                    print("Connection attempt");
-                    __connect(index);
-                  }
-                }
-            );
-          },
+                return ListTile(
+                    title: item.buildTitle(context),
+                    subtitle: item.buildSubtitle(context),
+                    onTap: () {
+                      if (DeviceList.selected != -2) {
+                        print("Connection attempt");
+                        __connect(index);
+                      }
+                    }
+                );
+              },
+            ),
+            if (isConnecting)
+              Container(
+                color: Colors.black.withOpacity(0.5),
+                child: Center(
+                  child: CircularProgressIndicator(),
+                ),
+              ),
+          ],
         ),
       ),
     );
