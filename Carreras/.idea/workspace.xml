@@ -6,9 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="d861c71f-6506-49ca-abb5-917f2b1e94bc" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carrera/.flutter-plugins-dependencies" beforeDir="false" afterPath="$PROJECT_DIR$/carrera/.flutter-plugins-dependencies" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carrera/lib/bluetooth/manager.dart" beforeDir="false" afterPath="$PROJECT_DIR$/carrera/lib/bluetooth/manager.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carrera/lib/ui/control.dart" beforeDir="false" afterPath="$PROJECT_DIR$/carrera/lib/ui/control.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carrera/lib/ui/buttons_widget.dart" beforeDir="false" afterPath="$PROJECT_DIR$/carrera/lib/ui/buttons_widget.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
