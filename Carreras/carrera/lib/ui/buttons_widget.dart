@@ -33,7 +33,8 @@ class _ButtonsWidgetState extends State<ButtonsWidget> {
     int? activeButton = prefs.getInt('activeButton');
     if (activeButton != null) {
       setState(() {
-        _controller.setActiveButton(activeButton);
+        _onButtonPressed(activeButton);
+        widget.manager.message("S$activeButton\n");
       });
     }
   }

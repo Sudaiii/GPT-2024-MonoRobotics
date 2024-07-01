@@ -30,6 +30,21 @@ class _ControlState extends State<Control> {
     super.initState();
     _checkConnection(); // Verificar conexión al iniciar
     _startPeriodicCheck(); // Iniciar verificación periódica
+    _controller.manager = widget.manager;
+    _controller.addListener(() {
+      setState(() {});
+    });
+    _loadSelectedButtonIndex();
+  }
+
+  _loadSelectedButtonIndex() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int? selectedButtonIndex = prefs.getInt('selected_button_index');
+    if (selectedButtonIndex != null) {
+      setState(() {
+        _isDPadSelected = selectedButtonIndex == 0;
+      });
+    }
   }
 
   void _startPeriodicCheck() {
@@ -50,6 +65,9 @@ class _ControlState extends State<Control> {
   @override
   void dispose() {
     _timer?.cancel(); // Cancelar el timer al destruir el widget
+    _controller.removeListener(() {
+      setState(() {});
+    });
     super.dispose();
   }
 
