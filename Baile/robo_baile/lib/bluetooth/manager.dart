@@ -1,5 +1,5 @@
-
 import 'dart:typed_data';
+import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -8,13 +8,13 @@ class BluetoothManager {
   late List<BluetoothDevice> devices;
 
   BluetoothManager() {
-    _requestPermissions();
+    requestPermissions();
+    listDevices();
   }
 
-  Future<void> _requestPermissions() async {
+  Future<void> requestPermissions() async {
     await [
       Permission.bluetooth,
-
       Permission.bluetoothScan,
       Permission.bluetoothConnect,
       Permission.location,
@@ -22,22 +22,39 @@ class BluetoothManager {
   }
 
   Future<List<BluetoothDevice>> listDevices() async {
-    // Solicitar permisos
-    if (await Permission.bluetoothConnect.request().isGranted) {
-      devices = await FlutterBluetoothSerial.instance.getBondedDevices();
-    } else {
-      devices = [];
-    }
+    devices = await FlutterBluetoothSerial.instance.getBondedDevices();
     return devices;
   }
 
-  Future<void> connect(String address) async {
+  Future<void> connect(BuildContext context, String address) async {
+    devices = await FlutterBluetoothSerial.instance.getBondedDevices();
     try {
       _connection = await BluetoothConnection.toAddress(address);
       print('Connected to $address');
+      _showConnectedDialog(context);
     } catch (error) {
       print('Error connecting to device: $error');
     }
+  }
+
+  void _showConnectedDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Device Paired'),
+          content: Text('Successfully connected to the device.'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   Future<void> message(String message) async {

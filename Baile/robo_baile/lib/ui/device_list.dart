@@ -1,87 +1,57 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
+import 'package:robobaile/bluetooth/device.dart';
 import 'package:robobaile/bluetooth/manager.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 class DeviceList extends StatefulWidget {
+  final List<Device> devices = [];
   final BluetoothManager manager;
 
   DeviceList({Key? key, required this.manager}) : super(key: key);
 
+  static int selected = -1;
+
   @override
-  _DeviceListState createState() => _DeviceListState();
+  _DeviceList createState() => _DeviceList();
 }
 
-class _DeviceListState extends State<DeviceList> {
-  List<BluetoothDevice> _devices = [];
-  bool _isLoading = false;
+class _DeviceList extends State<DeviceList> {
+  Future<void> _fetchDevices() async {
+    List<BluetoothDevice> devices = await widget.manager.listDevices();
+    for (BluetoothDevice device in devices) {
+      String name = device.name ?? "Unknown Device";
+      widget.devices.add(Device(name: name, address: device.address));
+    }
+    setState(() {
+      // Trigger rebuild
+    });
+  }
 
   @override
   void initState() {
     super.initState();
-    _fetchDevices();
-  }
-
-  Future<void> _fetchDevices() async {
-    setState(() {
-      _isLoading = true;
-    });
-
-    // Solicitar permisos necesarios
-    await [
-      Permission.bluetoothScan,
-      Permission.bluetoothConnect,
-      Permission.location,
-    ].request();
-
-    if (await Permission.bluetoothConnect.isGranted) {
-      // Obtener dispositivos emparejados
-      List<BluetoothDevice> devices = await widget.manager.listDevices();
-      setState(() {
-        _devices = devices;
-        _isLoading = false;
-      });
-    } else {
-      setState(() {
-        _isLoading = false;
-      });
-      // cuando los permisos no son otorgados
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text("Permiso denegado"),
-          content: Text("Los permisos de Bluetooth son necesarios para listar dispositivos."),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text("Aceptar"),
-            ),
-          ],
-        ),
-      );
+    if (widget.devices.isEmpty) {
+      _fetchDevices();
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    const title = 'Lista Dispositivos';
+    final items = widget.devices;
+
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Lista de Dispositivos"),
-      ),
-      body: _isLoading
-          ? Center(child: CircularProgressIndicator())
-          : _devices.isEmpty
-          ? Center(child: Text("No se encontraron dispositivos"))
-          : ListView.builder(
-        itemCount: _devices.length,
+      appBar: AppBar(title: Text(title)),
+      body: ListView.builder(
+        itemCount: items.length,
         itemBuilder: (context, index) {
-          final device = _devices[index];
+          final item = items[index];
           return ListTile(
-            title: Text(device.name ?? "Dispositivo Desconocido"),
-            subtitle: Text(device.address),
+            title: item.buildTitle(context),
+            subtitle: item.buildsubTitle(context),
             onTap: () {
-              widget.manager.connect(device.address);
+              DeviceList.selected = index;
+              widget.manager.connect(context, items[index].address); // Pass context
             },
           );
         },
