@@ -46,7 +46,7 @@ class MyApp extends StatelessWidget {
 
 class HomePage extends StatefulWidget {
   final BluetoothManager manager = BluetoothManager();
-   HomePage({super.key});
+  HomePage({super.key});
 
   @override
   _HomePageState createState() => _HomePageState();
