@@ -54,7 +54,7 @@ void motor(int left, int right) {
 void setup() {
   // Pin setup
   Serial.begin(9600);
-  Serial.println("ENTER AT Commands:");
+  Serial.println("ENTER AT Commands AA:");
 
   pinMode(BIN2  , OUTPUT);
   pinMode(BIN1  , OUTPUT);
@@ -71,11 +71,13 @@ void loop() {
       //Parse message received
       btSerial.print("Received: ");
       btSerial.println(buffer);
+      Serial.println(buffer);
 
       if (buffer.length() > 1) {
         //Change speed
         String initial = buffer.substring(0, 1);
-        if (initial == "S") {
+        Serial.println(buffer.length());
+        if (initial == "S" && buffer.length() == 3) {
           speedCategory = buffer.substring(1, buffer.length()-1).toInt();
           setBaseSpeed();
           chooseDirection();
@@ -107,11 +109,11 @@ void loop() {
 
 void setBaseSpeed() {
   if (speedCategory == 3) {
-    speed = 160;
+    speed = 180;
   }
   
   else if (speedCategory == 2) {
-    speed = 140;
+    speed = 160;
   }
   
   else if (speedCategory == 1) {
@@ -135,21 +137,21 @@ void chooseDirection() {
   else if (abs(valueX) > abs(valueY)) {
     if (valueX >= 0) {
       //Right
-      changeSpeed(targetL, -targetR);
+      changeSpeed(-targetL, targetR);
     }
     else {
       //Left
-      changeSpeed(-targetL, targetR);
+      changeSpeed(targetL, -targetR);
     }
   }
   else {
     if (valueY >= 0) {
       //Forward
-      changeSpeed(targetL, targetR);
+      changeSpeed(-targetL, -targetR);
     }
     else {
       //Backward
-      changeSpeed(-targetL, -targetR);
+      changeSpeed(targetL, targetR);
     }
   }
 }
