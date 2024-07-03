@@ -1,20 +1,23 @@
-
 import 'dart:typed_data';
+import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-class BluetoothManager {
+class BluetoothManager with ChangeNotifier {
+  static final BluetoothManager _instance = BluetoothManager._internal();
+  factory BluetoothManager() => _instance;
+
   BluetoothConnection? _connection;
   late List<BluetoothDevice> devices;
 
-  BluetoothManager() {
-    _requestPermissions();
+  BluetoothManager._internal() {
+    requestPermissions();
+    listDevices();
   }
 
-  Future<void> _requestPermissions() async {
+  Future<void> requestPermissions() async {
     await [
       Permission.bluetooth,
-
       Permission.bluetoothScan,
       Permission.bluetoothConnect,
       Permission.location,
@@ -22,22 +25,39 @@ class BluetoothManager {
   }
 
   Future<List<BluetoothDevice>> listDevices() async {
-    // Solicitar permisos
-    if (await Permission.bluetoothConnect.request().isGranted) {
-      devices = await FlutterBluetoothSerial.instance.getBondedDevices();
-    } else {
-      devices = [];
-    }
+    devices = await FlutterBluetoothSerial.instance.getBondedDevices();
     return devices;
   }
 
-  Future<void> connect(String address) async {
+  Future<void> connect(BuildContext context, String address) async {
+    devices = await FlutterBluetoothSerial.instance.getBondedDevices();
     try {
       _connection = await BluetoothConnection.toAddress(address);
       print('Connected to $address');
+      _showConnectedDialog(context);
     } catch (error) {
       print('Error connecting to device: $error');
     }
+  }
+
+  void _showConnectedDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Device Paired'),
+          content: Text('Successfully connected to the device.'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   Future<void> message(String message) async {
@@ -46,6 +66,7 @@ class BluetoothManager {
       Uint8List bytes = Uint8List.fromList(list);
       _connection?.output.add(bytes);
       await _connection?.output.allSent;
+      print("Comando enviado: "+ message);
     } else {
       print("Not connected");
     }
