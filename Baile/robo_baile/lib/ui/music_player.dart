@@ -5,8 +5,8 @@ import 'package:provider/provider.dart';
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:robobaile/ui/music_player_state.dart';
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class FullScreenPlayer extends StatelessWidget {
+  const FullScreenPlayer({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -33,15 +33,20 @@ class MyApp extends StatelessWidget {
         ),
         child: Center(
           child: Container(
-            width: 300,
-            height: 500,
-            color: Colors.white.withOpacity(0.5),
+            width: 350,
+            height: 600,
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.5),
+              borderRadius: BorderRadius.circular(30),
+            ),
             child: MusicPlayer(
               songTitle: musicPlayerState.currentSongTitle,
               artist: musicPlayerState.currentArtist,
               isPlaying: musicPlayerState.isPlaying,
               togglePlayPause: musicPlayerState.togglePlayPause,
               player: musicPlayerState.player,
+              onNext: musicPlayerState.playNext,
+              onPrevious: musicPlayerState.playPrevious,
             ),
           ),
         ),
@@ -56,6 +61,8 @@ class MusicPlayer extends StatelessWidget {
   final bool isPlaying;
   final VoidCallback togglePlayPause;
   final AudioPlayer player;
+  final VoidCallback onNext;
+  final VoidCallback onPrevious;
 
   const MusicPlayer({
     required this.songTitle,
@@ -63,6 +70,8 @@ class MusicPlayer extends StatelessWidget {
     required this.isPlaying,
     required this.togglePlayPause,
     required this.player,
+    required this.onNext,
+    required this.onPrevious,
     super.key,
   });
 
@@ -71,23 +80,17 @@ class MusicPlayer extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Expanded(
-          child: Image.network(
-            'URL de la foto de la canción',
-            fit: BoxFit.cover,
-          ),
-        ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 40), // Espacio superior
         Text(
           songTitle,
-          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: 5),
         Text(
           artist,
-          style: const TextStyle(fontSize: 16),
+          style: const TextStyle(fontSize: 20),
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 30),
         Container(
           decoration: BoxDecoration(
             shape: BoxShape.circle,
@@ -95,6 +98,7 @@ class MusicPlayer extends StatelessWidget {
             border: Border.all(color: Colors.black, width: 2),
           ),
           child: IconButton(
+            iconSize: 50, // Tamaño más grande del botón
             icon: Icon(isPlaying ? Icons.pause : Icons.play_arrow),
             onPressed: togglePlayPause,
           ),
@@ -104,24 +108,24 @@ class MusicPlayer extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             IconButton(
+              iconSize: 40, // Tamaño más grande del botón
               icon: const Icon(Icons.skip_previous),
-              onPressed: () {
-                // Logic to play previous song
-              },
+              onPressed: onPrevious,
             ),
             IconButton(
+              iconSize: 40, // Tamaño más grande del botón
               icon: const Icon(Icons.skip_next),
-              onPressed: () {
-                // Logic to play next song
-              },
+              onPressed: onNext,
             ),
           ],
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 30),
         StreamBuilder<Duration?>(
           stream: player.positionStream,
           builder: (context, snapshot) {
             return ProgressBar(
+              barHeight: 8, // Tamaño más grande de la barra de progreso
+              thumbRadius: 10,
               progress: snapshot.data ?? Duration.zero,
               buffered: player.bufferedPosition,
               total: player.duration ?? Duration.zero,
@@ -132,6 +136,54 @@ class MusicPlayer extends StatelessWidget {
           },
         ),
       ],
+    );
+  }
+}
+
+class MiniPlayer extends StatefulWidget {
+  const MiniPlayer({super.key});
+
+  @override
+  _MiniPlayer createState() => _MiniPlayer();
+}
+
+class _MiniPlayer extends State<MiniPlayer> {
+  @override
+  Widget build(BuildContext context) {
+    final musicPlayerState = Provider.of<MusicPlayerState>(context);
+    return GestureDetector(
+      onHorizontalDragEnd: (details) {
+        if (details.primaryVelocity != null && details.primaryVelocity! < 0) {
+          musicPlayerState.togglePlayPause();
+        } else if (details.primaryVelocity != null && details.primaryVelocity! > 0) {
+          musicPlayerState.stopPlaying();
+        }
+      },
+      onTap: () {
+        musicPlayerState.setFullScreenPlayerVisible(true);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const FullScreenPlayer(),
+          ),
+        );
+      },
+      child: Container(
+        color: Colors.grey[200],
+        height: 60,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Text(musicPlayerState.currentSongTitle),
+            IconButton(
+              icon: Icon(
+                musicPlayerState.isPlaying ? Icons.pause : Icons.play_arrow,
+              ),
+              onPressed: musicPlayerState.togglePlayPause,
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
