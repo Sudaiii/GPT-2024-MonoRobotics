@@ -1,39 +1,22 @@
+// song.dart
+import 'dart:typed_data';
+import 'package:flutter/material.dart';
+import 'package:flutter_media_metadata/flutter_media_metadata.dart';
+import 'dart:io';
+
 class Song {
-  final String id;
-  final String artist;
-  final String title;
-  final String songImageUrl;
-  final String songUrl;
+final String songUrl;
+final String title;
+final String artist;
+Uint8List? image;
 
-  Song({
-    this.id = '',
-    required this.artist,
-    required this.title,
-    required this.songImageUrl,
-    required this.songUrl,
-  });
+Song({
+required this.songUrl,
+required this.title,
+required this.artist,
+this.image,
+});
 
-  static List<Song> songs= [
-    Song(
-      id: '1',
-      artist: 'Artist A',
-      title: 'Song A',
-      songImageUrl: 'URL',
-      songUrl: 'test'
-    ),
-    Song(
-        id: '2',
-        artist: 'Artist B',
-        title: 'Song B',
-        songImageUrl: 'URL',
-        songUrl: 'test'
-    ),
-    Song(
-        id: '3',
-        artist: 'Artist C',
-        title: 'Song C',
-        songImageUrl: 'URL',
-        songUrl: 'test'
-    )
-  ];
+Widget buildTitle(BuildContext context) => Text(title, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold));
+Widget buildArtist(BuildContext context) => Text(artist, style: const TextStyle(fontSize: 16));
 }

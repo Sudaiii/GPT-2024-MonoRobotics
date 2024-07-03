@@ -1,35 +1,30 @@
-// Copyright 2019-present the Flutter authors. All Rights Reserved.
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 import 'dart:io' show Platform;
-
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:window_size/window_size.dart';
+import 'package:robobaile/ui/songs_list.dart';
+import 'package:robobaile/ui/device_list.dart';
+import 'package:robobaile/ui/music_player_state.dart';
+import 'package:robobaile/bluetooth/manager.dart';
+import 'package:robobaile/ui/music_player.dart';
 
-import 'ui/data_transfer_page.dart';
-import 'ui/infinite_process_page.dart';
-import 'ui/performance_page.dart';
+// main.dart
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   setupWindow();
   runApp(
-    const MaterialApp(
-      home: HomePage(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => MusicPlayerState()),
+        ChangeNotifierProvider(create: (context) => BluetoothManager()), // Usar ChangeNotifierProvider para BluetoothManager
+      ],
+      child: const MyApp(),
     ),
   );
 }
+
 
 const double windowWidth = 1024;
 const double windowHeight = 800;
@@ -37,48 +32,84 @@ const double windowHeight = 800;
 void setupWindow() {
   if (!kIsWeb && (Platform.isWindows || Platform.isLinux || Platform.isMacOS)) {
     WidgetsFlutterBinding.ensureInitialized();
-    setWindowTitle('Isolate Example');
+    setWindowTitle('Robobaile');
     setWindowMinSize(const Size(windowWidth, windowHeight));
   }
 }
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData.light(),
-      home: DefaultTabController(
-        length: 3,
-        child: Scaffold(
-          appBar: AppBar(
-            bottom: const TabBar(
-              tabs: [
-                Tab(
-                  icon: Icon(Icons.music_note),
-                  text: 'Música',
-                ),
-                Tab(
-                  icon: Icon(Icons.list),
-                  text: 'Playlists',
-                ),
-                Tab(
-                  icon: Icon(Icons.settings),
-                  text: 'Configuración',
-                ),
-              ],
-            ),
-            title: const Text('Robobaile'),
-          ),
-          body: const TabBarView(
+      home: HomePage(),
+    );
+  }
+}
+
+class HomePage extends StatefulWidget {
+  HomePage({super.key});
+
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+  bool isFullScreenPlayerVisible = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+    final musicPlayerState = Provider.of<MusicPlayerState>(context, listen: false);
+    musicPlayerState.addListener(() {
+      setState(() {
+        isFullScreenPlayerVisible = musicPlayerState.isFullScreenPlayerVisible;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final musicPlayerState = Provider.of<MusicPlayerState>(context);
+    final bluetoothManager = Provider.of<BluetoothManager>(context); // Obtiene la  instancia de BluetoothManager
+    return Scaffold(
+      appBar: isFullScreenPlayerVisible
+          ? null
+          : AppBar(
+        bottom: TabBar(
+          controller: _tabController,
+          tabs: const [
+            Tab(icon: Icon(Icons.music_note, color: Colors.green), text: 'Música'),
+            Tab(icon: Icon(Icons.settings), text: 'Configuración'),
+          ],
+        ),
+        title: const Text('Robobaile'),
+      ),
+      body: Stack(
+        children: [
+          TabBarView(
+            controller: _tabController,
             children: [
-              PerformancePage(),
-              InfiniteProcessPageStarter(),
-              DataTransferPageStarter(),
+              const SongList(),
+              DeviceList(manager: bluetoothManager), // Pasa la misma instancia de BluetoothManager a DeviceList
             ],
           ),
-        ),
+          if (musicPlayerState.isPlaying && !musicPlayerState.isFullScreenPlayerVisible)
+            const Align(
+              alignment: Alignment.bottomCenter,
+              child: MiniPlayer(),
+            ),
+        ],
       ),
     );
   }
