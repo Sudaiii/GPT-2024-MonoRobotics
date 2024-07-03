@@ -1,4 +1,3 @@
-// main.dart
 import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
@@ -10,16 +9,22 @@ import 'package:robobaile/ui/music_player_state.dart';
 import 'package:robobaile/bluetooth/manager.dart';
 import 'package:robobaile/ui/music_player.dart';
 
+// main.dart
+
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   setupWindow();
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => MusicPlayerState(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => MusicPlayerState()),
+        ChangeNotifierProvider(create: (context) => BluetoothManager()), // Usar ChangeNotifierProvider para BluetoothManager
+      ],
       child: const MyApp(),
     ),
   );
 }
+
 
 const double windowWidth = 1024;
 const double windowHeight = 800;
@@ -39,13 +44,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData.light(),
-      home:  HomePage(),
+      home: HomePage(),
     );
   }
 }
 
 class HomePage extends StatefulWidget {
-  final BluetoothManager manager = BluetoothManager();
   HomePage({super.key});
 
   @override
@@ -77,6 +81,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   @override
   Widget build(BuildContext context) {
     final musicPlayerState = Provider.of<MusicPlayerState>(context);
+    final bluetoothManager = Provider.of<BluetoothManager>(context); // Obtiene la  instancia de BluetoothManager
     return Scaffold(
       appBar: isFullScreenPlayerVisible
           ? null
@@ -96,7 +101,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
             controller: _tabController,
             children: [
               const SongList(),
-              DeviceList(manager: widget.manager),
+              DeviceList(manager: bluetoothManager), // Pasa la misma instancia de BluetoothManager a DeviceList
             ],
           ),
           if (musicPlayerState.isPlaying && !musicPlayerState.isFullScreenPlayerVisible)

@@ -3,11 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-class BluetoothManager {
+class BluetoothManager with ChangeNotifier {
+  static final BluetoothManager _instance = BluetoothManager._internal();
+  factory BluetoothManager() => _instance;
+
   BluetoothConnection? _connection;
   late List<BluetoothDevice> devices;
 
-  BluetoothManager() {
+  BluetoothManager._internal() {
     requestPermissions();
     listDevices();
   }
@@ -63,6 +66,7 @@ class BluetoothManager {
       Uint8List bytes = Uint8List.fromList(list);
       _connection?.output.add(bytes);
       await _connection?.output.allSent;
+      print("Comando enviado: "+ message);
     } else {
       print("Not connected");
     }

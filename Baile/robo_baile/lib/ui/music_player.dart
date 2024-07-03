@@ -1,4 +1,3 @@
-// ui/music_player.dart
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:provider/provider.dart';
@@ -80,7 +79,7 @@ class MusicPlayer extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const SizedBox(height: 40), // Espacio superior
+        const SizedBox(height: 40),
         Text(
           songTitle,
           style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
@@ -98,7 +97,7 @@ class MusicPlayer extends StatelessWidget {
             border: Border.all(color: Colors.black, width: 2),
           ),
           child: IconButton(
-            iconSize: 50, // Tamaño más grande del botón
+            iconSize: 50,
             icon: Icon(isPlaying ? Icons.pause : Icons.play_arrow),
             onPressed: togglePlayPause,
           ),
@@ -108,12 +107,12 @@ class MusicPlayer extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             IconButton(
-              iconSize: 40, // Tamaño más grande del botón
+              iconSize: 40,
               icon: const Icon(Icons.skip_previous),
               onPressed: onPrevious,
             ),
             IconButton(
-              iconSize: 40, // Tamaño más grande del botón
+              iconSize: 40,
               icon: const Icon(Icons.skip_next),
               onPressed: onNext,
             ),
@@ -124,7 +123,7 @@ class MusicPlayer extends StatelessWidget {
           stream: player.positionStream,
           builder: (context, snapshot) {
             return ProgressBar(
-              barHeight: 8, // Tamaño más grande de la barra de progreso
+              barHeight: 8,
               thumbRadius: 10,
               progress: snapshot.data ?? Duration.zero,
               buffered: player.bufferedPosition,

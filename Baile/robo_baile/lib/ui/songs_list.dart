@@ -7,24 +7,30 @@ import 'package:provider/provider.dart';
 import 'package:robobaile/models/song.dart';
 import 'package:robobaile/ui/music_player.dart';
 import 'package:robobaile/ui/music_player_state.dart';
+import 'package:robobaile/bluetooth/manager.dart'; // Importa el BluetoothManager
 
 class SongList extends StatefulWidget {
   const SongList({super.key});
 
   static int selected = -1;
+  static String danceType = ''; // Variable global para el tipo de baile seleccionado
 
   @override
   _SongList createState() => _SongList();
 }
 
 class _SongList extends State<SongList> {
+  late BluetoothManager manager; // Declara una instancia de BluetoothManager
+
   @override
   void initState() {
     super.initState();
-    final musicPlayerState = Provider.of<MusicPlayerState>(context, listen: false);
+    manager = Provider.of<BluetoothManager>(context, listen: false); // Inicializa el BluetoothManager
+    final musicPlayerState =
+    Provider.of<MusicPlayerState>(context, listen: false);
     musicPlayerState.addListener(() {
       setState(() {
-        // Trigger rebuild when musicPlayerState changes
+
       });
     });
   }
@@ -53,9 +59,14 @@ class _SongList extends State<SongList> {
                       subtitle: item.buildArtist(context),
                       onTap: () {
                         SongList.selected = index;
-                        musicPlayerState.playSong(item.title, item.artist, item.songUrl);
+                        musicPlayerState.playSong(
+                            item.title, item.artist, item.songUrl);
                         musicPlayerState.setFullScreenPlayerVisible(true);
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => const FullScreenPlayer()));
+                        sendDanceTypeMessage(); // Envía el tipo de baile seleccionado
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const FullScreenPlayer()));
                       },
                     );
                   },
@@ -67,22 +78,31 @@ class _SongList extends State<SongList> {
                   children: [
                     ElevatedButton(
                       onPressed: () async {
-                        FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.audio, allowMultiple: false);
+                        FilePickerResult? result = await FilePicker.platform
+                            .pickFiles(
+                            type: FileType.audio, allowMultiple: false);
                         if (result != null) {
                           final filePath = result.files.single.path;
                           print('Ruta archivo: $filePath');
-                          await MetadataRetriever.fromFile(File(filePath!)).then((metadata) {
-                            String title = metadata.trackName ?? "MISSING TITLE";
-                            String artist = metadata.authorName ?? "MISSING AUTHOR";
+                          await MetadataRetriever.fromFile(File(filePath!))
+                              .then((metadata) {
+                            String title =
+                                metadata.trackName ?? "MISSING TITLE";
+                            String artist =
+                                metadata.authorName ?? "MISSING AUTHOR";
                             Uint8List? image = metadata.albumArt;
                             print(title);
                             print(artist);
                             print(filePath);
-                            Song newSong = Song(songUrl: filePath, title: title, artist: artist, image: image);
+                            Song newSong = Song(
+                                songUrl: filePath,
+                                title: title,
+                                artist: artist,
+                                image: image);
                             musicPlayerState.addSong(newSong);
                           }).catchError((_) {
                             setState(() {
-                              // Handle error
+                              // en caso de error x
                             });
                           });
                         }
@@ -103,28 +123,24 @@ class _SongList extends State<SongList> {
                                   ListTile(
                                     title: const Text('Baile 1'),
                                     onTap: () {
-                                      // Handle Baile 1 selection
+                                      SongList.danceType = "D"; // Guarda el tipo de baile seleccionado
                                       Navigator.of(context).pop();
-                                      _showDanceOptions(context, 'Baile 1');
                                     },
                                   ),
                                   ListTile(
                                     title: const Text('Baile 2'),
                                     onTap: () {
-                                      // Handle Baile 2 selection
+                                      SongList.danceType = "D2"; // Guarda el tipo de baile seleccionado
                                       Navigator.of(context).pop();
-                                      _showDanceOptions(context, 'Baile 2');
                                     },
                                   ),
                                   ListTile(
                                     title: const Text('Baile 3'),
                                     onTap: () {
-                                      // Handle Baile 3 selection
+                                      SongList.danceType = "D3"; // Guarda el tipo de baile seleccionado
                                       Navigator.of(context).pop();
-                                      _showDanceOptions(context, 'Baile 3');
                                     },
                                   ),
-                                  // Add more dance types here
                                 ],
                               ),
                               actions: <Widget>[
@@ -144,11 +160,13 @@ class _SongList extends State<SongList> {
                   ],
                 ),
               ),
-              if (musicPlayerState.isPlaying && !musicPlayerState.isFullScreenPlayerVisible)
-                const SizedBox(height: 60), // Espacio para el MiniPlayer
+              if (musicPlayerState.isPlaying &&
+                  !musicPlayerState.isFullScreenPlayerVisible)
+                const SizedBox(height: 60), // Espacio para el reproductor minimizado
             ],
           ),
-          if (musicPlayerState.isPlaying && !musicPlayerState.isFullScreenPlayerVisible)
+          if (musicPlayerState.isPlaying &&
+              !musicPlayerState.isFullScreenPlayerVisible)
             const Align(
               alignment: Alignment.bottomCenter,
               child: MiniPlayer(),
@@ -158,49 +176,9 @@ class _SongList extends State<SongList> {
     );
   }
 
-  void _showDanceOptions(BuildContext context, String danceType) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Opciones para $danceType'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              ListTile(
-                title: const Text('Opción 1'),
-                onTap: () {
-                  // Handle Option 1
-                  Navigator.of(context).pop();
-                },
-              ),
-              ListTile(
-                title: const Text('Opción 2'),
-                onTap: () {
-                  // Handle Option 2
-                  Navigator.of(context).pop();
-                },
-              ),
-              ListTile(
-                title: const Text('Opción 3'),
-                onTap: () {
-                  // Handle Option 3
-                  Navigator.of(context).pop();
-                },
-              ),
-              // Add more options here
-            ],
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Cancelar'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
+  void sendDanceTypeMessage() {
+    if (SongList.danceType.isNotEmpty) {
+      manager.message(SongList.danceType);
+    }
   }
 }
