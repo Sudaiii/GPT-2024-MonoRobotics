@@ -50,6 +50,18 @@ void motor(int left, int right) {
   motorR(right);
 }
 
+boolean isInt(String tString) {
+  String tBuf;
+  
+  if(tString.charAt(0) == '+' || tString.charAt(0) == '-') tBuf = &tString[1];
+  else tBuf = tString;  
+
+  for(int x=0;x<tBuf.length();x++)
+  {
+    if(tBuf.charAt(x) < '0' || tBuf.charAt(x) > '9') return false;
+  }
+  return true;
+}
 
 void setup() {
   // Pin setup
@@ -76,22 +88,29 @@ void loop() {
       if (buffer.length() > 1) {
         //Change speed
         String initial = buffer.substring(0, 1);
-        Serial.println(buffer.length());
-        if (initial == "S" && buffer.length() == 3) {
-          speedCategory = buffer.substring(1, buffer.length()-1).toInt();
+        int locationX = buffer.indexOf('X');
+        int locationY = buffer.indexOf('Y');
+        int bufferLen = buffer.length();
+        Serial.println(bufferLen);
+        if (initial == "S" && bufferLen == 3) {
+          //Change speed
+          speedCategory = buffer.substring(1, bufferLen-1).toInt();
           setBaseSpeed();
           chooseDirection();
         }
-        else {
+        else if (locationX >= 0 &&  locationY >= 0){
           //Change direction
-          valueX = buffer.substring(buffer.indexOf('X')+1, buffer.indexOf('Y')).toInt();
-          valueY = buffer.substring(buffer.indexOf('Y')+1, buffer.length()-1).toInt();
-
-          if (
-            valueX > -255 && valueX < 255 
-            && valueY > -255 && valueY < 255
-          ) {
-            chooseDirection();
+          String stringX = buffer.substring(locationX+1, locationY);
+          String stringY = buffer.substring(locationY+1, bufferLen-1);
+          if(isInt(stringX) && isInt(stringY)){
+            valueX = stringX.toInt();
+            valueY = stringY.toInt();
+            if (
+              valueX > -255 && valueX < 255 
+              && valueY > -255 && valueY < 255
+            ) {
+              chooseDirection();
+            }
           }
         }
 
