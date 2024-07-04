@@ -7,7 +7,8 @@ import 'package:provider/provider.dart';
 import 'package:robobaile/models/song.dart';
 import 'package:robobaile/ui/music_player.dart';
 import 'package:robobaile/ui/music_player_state.dart';
-import 'package:robobaile/bluetooth/manager.dart'; // Importa el BluetoothManager
+import 'package:robobaile/bluetooth/manager.dart';
+import 'package:path/path.dart' as p;
 
 class SongList extends StatefulWidget {
   const SongList({super.key});
@@ -87,9 +88,9 @@ class _SongList extends State<SongList> {
                           await MetadataRetriever.fromFile(File(filePath!))
                               .then((metadata) {
                             String title =
-                                metadata.trackName ?? "MISSING TITLE";
+                                metadata.trackName ?? p.basenameWithoutExtension(filePath);
                             String artist =
-                                metadata.authorName ?? "MISSING AUTHOR";
+                                metadata.albumArtistName  ?? "MISSING AUTHOR";
                             Uint8List? image = metadata.albumArt;
                             print(title);
                             print(artist);
