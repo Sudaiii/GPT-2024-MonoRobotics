@@ -1,8 +1,6 @@
 #include <Otto.h>
 #include <SoftwareSerial.h>
 
-
-
 Otto Otto;
 
 // Definir los pines para cada servomotor
@@ -29,9 +27,8 @@ void setup() {
     Otto.init(leftLegPin, rightLegPin, leftFootPin, rightFootPin, true, Buzzer);
     //Otto.setTrims(80, 80, 120, 190);
     int posInicial[4] = {leftLegPos, rightLegPos, rightFootPos, leftFootPos };
-    Otto._moveServos(1000, posInicial);
     pinMode(speakerPin, OUTPUT);
-
+    Otto.home();
 }
 
 
@@ -161,38 +158,36 @@ void baile5() {
     }
 }
 
-void loop(){
-
-
+void loop() {
     if (Serial.available() > 0) {
-        Serial.print("Entrada de datos");
         String command = Serial.readString();
         command.trim();
 
         if (command == "D1") {
-            Serial.println("\nBaile 1 Seleccionado\n");
+            Serial.print("Baile 1 seleccionado\n");
             baile1();
         } else if (command == "D2") {
-            Serial.println("\nBaile 2 Seleccionado\n");
+            Serial.print("Baile 2 seleccionado\n");
             baile2();
         } else if (command == "D3") {
-            Serial.println("\nBaile 3 Seleccionado\n");
+            Serial.print("Baile 3 seleccionado\n");
             baile3();
         } else if (command == "D4") {
-            Serial.println("\nBaile 4 Seleccionado\n");
+            Serial.print("Baile 4 seleccionado\n");
             baile4();
         } else if (command == "D5") {
-            Serial.println("\nBaile 5 Seleccionado\n");
+            Serial.print("Baile 5 seleccionado\n");
             baile5();
-
         } else if (command == "W") {
+            Serial.print("Caminando...\n");
             Otto.walk(10, 1000, FORWARD);
         } else if (command == "STOP") {
             Otto.home();
         }
+    } else {
+
+        Otto.home();
     }
-
 }
-
 
 

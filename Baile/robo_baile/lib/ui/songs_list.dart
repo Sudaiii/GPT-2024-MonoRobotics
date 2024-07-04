@@ -124,7 +124,7 @@ class _SongList extends State<SongList> {
                                   ListTile(
                                     title: const Text('Baile 1'),
                                     onTap: () {
-                                      SongList.danceType = "D"; // Guarda el tipo de baile seleccionado
+                                      SongList.danceType = "D1"; // Guarda el tipo de baile seleccionado
                                       Navigator.of(context).pop();
                                     },
                                   ),
@@ -142,6 +142,21 @@ class _SongList extends State<SongList> {
                                       Navigator.of(context).pop();
                                     },
                                   ),
+                                  ListTile(
+                                    title: const Text('Baile 4'),
+                                    onTap: () {
+                                      SongList.danceType = "D4"; // Guarda el tipo de baile seleccionado
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                  ListTile(
+                                    title: const Text('Baile 5'),
+                                    onTap: () {
+                                      SongList.danceType = "D5"; // Guarda el tipo de baile seleccionado
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+
                                 ],
                               ),
                               actions: <Widget>[
