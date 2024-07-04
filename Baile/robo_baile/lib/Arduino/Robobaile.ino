@@ -27,6 +27,7 @@ void setup() {
     Otto.init(leftLegPin, rightLegPin, leftFootPin, rightFootPin, true, Buzzer);
     //Otto.setTrims(80, 80, 120, 190);
     int posInicial[4] = {leftLegPos, rightLegPos, rightFootPos, leftFootPos };
+    //Otto._moveServos(1000, posInicial);
     pinMode(speakerPin, OUTPUT);
     Otto.home();
 }
@@ -121,42 +122,52 @@ void baile2() {
         surprisedSound();
     }
 }
-
 void baile3() {
     Otto.home();
     for (int i = 0; i < 3; i++) {
         sadSound();
-        Otto.moonwalker(1, 1000, 1);
-        Otto.moonwalker(1, 1000, -1);
-        Otto.crusaito(1, 1000, 1);
-        Otto.crusaito(1, 1000, -1);
+        Otto.bend(1, 1000, 1);
+        Otto.bend(1, 1000, -1);
+        Otto.tiptoeSwing(1, 1200);
+        Otto.updown(1, 1200, 20);
+        Otto.updown(1, 1200, 20);
+        Otto.updown(1, 1200, 20);
         happySound();
     }
 }
+
 
 void baile4() {
     Otto.home();
     for (int i = 0; i < 3; i++) {
         talkRobot2();
-        Otto.crusaito(1, 1000, 1);
-        Otto.crusaito(1, 1000, -1);
-        Otto.shakeLeg(1, 1000, 1);
-        Otto.shakeLeg(1, 1000, -1);
+        Otto.flapping(1, 1200);
+        delay(200);
+        Otto.shakeLeg(1, 1200, 1);
+        Otto.walk(4, 1000, FORWARD);
+        Otto.shakeLeg(1, 1200, -1);
+        Otto.walk(4, 1000, -1);
         happySound();
     }
 }
+
 
 void baile5() {
     Otto.home();
     for (int i = 0; i < 3; i++) {
         happySound();
-        Otto.moonwalker(1, 1000, 1);
-        Otto.moonwalker(1, 1000, -1);
-        Otto.bend(1, 500, 1);
-        Otto.bend(1, 500, -1);
+        Otto.bend(1, 1000, 1);
+        Otto.bend(1, 1000, -1);
+        Otto.jump(1.0, 1200);
+        Otto.moonwalker(1, 1200, 1);
+        Otto.walk(4, 1000, -1);
+        Otto.flapping(1, 1200);
         talkRobot();
     }
 }
+
+
+
 
 void loop() {
     if (Serial.available() > 0) {
@@ -180,7 +191,7 @@ void loop() {
             baile5();
         } else if (command == "W") {
             Serial.print("Caminando...\n");
-            Otto.walk(10, 1000, FORWARD);
+            Otto.walk(4, 1000, FORWARD);
         } else if (command == "STOP") {
             Otto.home();
         }
